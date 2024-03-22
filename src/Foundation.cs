@@ -1,0 +1,122 @@
+namespace Blusher.Foundation;
+
+using System;
+using System.Runtime.InteropServices;
+
+using Blusher.Drawing;
+
+public class Foundation
+{
+#if BLUSHER_LIBFOUNDATION_DEV
+    const string libfoundationSo = "/home/hardboiled65/dev/foundation/build/libfoundation.so";
+#else
+    const string libfoundationSo = "libfoundation.so";
+#endif
+
+    internal struct ft_point_t
+    {
+        public float x;
+        public float y;
+    }
+
+    internal struct ft_size_t
+    {
+        public float width;
+        public float height;
+    }
+
+    internal struct ft_rect_t
+    {
+        public ft_point_t pos;
+        public ft_size_t size;
+
+        internal static ft_rect_t FromRect(Rect rect)
+        {
+            ft_rect_t ret;
+            ret.pos.x = rect.X;
+            ret.pos.y = rect.Y;
+            ret.size.width = rect.Width;
+            ret.size.height = rect.Height;
+
+            return ret;
+        }
+
+        internal IntPtr AllocCPtr()
+        {
+            IntPtr cPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ft_rect_t)));
+            Marshal.StructureToPtr(this, cPtr, false);
+
+            return cPtr;
+        }
+    }
+
+    internal struct ft_color_t
+    {
+        public byte r;
+        public byte g;
+        public byte b;
+        public byte a;
+
+        internal static ft_color_t FromColor(Color color)
+        {
+            ft_color_t ret;
+            ret.r = color.R;
+            ret.g = color.G;
+            ret.b = color.B;
+            ret.a = color.A;
+
+            return ret;
+        }
+
+        internal IntPtr AllocCPtr()
+        {
+            IntPtr cPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ft_color_t)));
+            Marshal.StructureToPtr(this, cPtr, false);
+
+            return cPtr;
+        }
+    }
+
+    public enum ft_desktop_surface_role
+    {
+        FT_DESKTOP_SURFACE_ROLE_TOPLEVEL,
+        FT_DESKTOP_SURFACE_ROLE_POPUP,
+    }
+
+    [DllImport(libfoundationSo)]
+    public static extern bool ft_rect_contains_point(IntPtr rect, IntPtr point);
+
+    //====================
+    // Application
+    //====================
+    [DllImport(libfoundationSo)]
+    public static extern IntPtr ft_application_new(int argc, in string[] argv);
+    [DllImport(libfoundationSo)]
+    public static extern int ft_application_exec(IntPtr application);
+
+    //======================
+    // Desktop Surface
+    //======================
+    [DllImport(libfoundationSo)]
+    public static extern IntPtr ft_desktop_surface_new(ft_desktop_surface_role role);
+    [DllImport(libfoundationSo)]
+    public static extern IntPtr ft_desktop_surface_surface(IntPtr desktopSurface);
+    [DllImport(libfoundationSo)]
+    public static extern void ft_desktop_surface_show(IntPtr desktopSurface);
+
+    //===================
+    // Surface
+    //===================
+    [DllImport(libfoundationSo)]
+    public static extern IntPtr ft_surface_root_view(IntPtr surface);
+
+    //===================
+    // View
+    //===================
+    [DllImport(libfoundationSo)]
+    public static extern IntPtr ft_view_new(IntPtr parent, IntPtr geometry);
+    [DllImport(libfoundationSo)]
+    public static extern void ft_view_set_surface(IntPtr view, IntPtr surface);
+    [DllImport(libfoundationSo)]
+    public static extern void ft_view_set_color(IntPtr view, IntPtr color);
+}
