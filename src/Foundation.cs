@@ -160,4 +160,18 @@ internal class Foundation
 
     [DllImport(libfoundationSo)]
     public static extern void ft_event_set_propagation(IntPtr ftEvent, bool value);
+
+    [DllImport(libfoundationSo)]
+    public static extern IntPtr ft_event_resize_old_size(IntPtr ftEvent);
+    [DllImport(libfoundationSo)]
+    public static extern IntPtr ft_event_resize_size(IntPtr ftEvent);
+
+    //==================
+    // Structs
+    //==================
+    [DllImport(libfoundationSo)]
+    public static extern float ft_size_width(IntPtr ftSize);
+
+    [DllImport(libfoundationSo)]
+    public static extern float ft_size_height(IntPtr ftSize);
 }

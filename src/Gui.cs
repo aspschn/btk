@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 
 using Blusher.Foundation;
 using Blusher.Drawing;
+using Blusher.Events;
 
 /// <summary>
 /// A global application object.
@@ -126,9 +127,11 @@ public class Window
         Foundation.ft_desktop_surface_show(this._ftDesktopSurface);
     }
 
-    protected virtual void ResizeEvent()
+    protected virtual void ResizeEvent(ResizeEvent evt)
     {
         Console.WriteLine("Window resize event.");
+        Console.WriteLine(evt.Size.Width);
+        Console.WriteLine(evt.Size.Height);
     }
 
     private void AddResizeEventListener()
@@ -140,7 +143,15 @@ public class Window
 
     private void CallResizeEvent(IntPtr ftEvent)
     {
-        this.ResizeEvent();
+        IntPtr oldSize = Foundation.ft_event_resize_size(ftEvent);
+        var oldWidth = Foundation.ft_size_width(oldSize);
+        var oldHeight = Foundation.ft_size_height(oldSize);
+        IntPtr size = Foundation.ft_event_resize_size(ftEvent);
+        var width = Foundation.ft_size_width(size);
+        var height = Foundation.ft_size_height(size);
+
+        ResizeEvent evt = new ResizeEvent(new Size(oldWidth, oldHeight), new Size(width, height));
+        this.ResizeEvent(evt);
     }
 
     private IntPtr _ftDesktopSurface;
