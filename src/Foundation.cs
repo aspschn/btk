@@ -5,7 +5,29 @@ using System.Runtime.InteropServices;
 
 using Blusher.Drawing;
 
-public class Foundation
+internal class Enums
+{
+    public enum ft_event_target_type
+    {
+        FT_EVENT_TARGET_TYPE_APPLICATION,
+        FT_EVENT_TARGET_TYPE_SURFACE,
+        FT_EVENT_TARGET_TYPE_VIEW,
+    }
+
+    public enum ft_event_type {
+        FT_EVENT_TYPE_POINTER_ENTER,
+        FT_EVENT_TYPE_POINTER_LEAVE,
+        FT_EVENT_TYPE_POINTER_MOVE,
+        FT_EVENT_TYPE_POINTER_PRESS,
+        FT_EVENT_TYPE_POINTER_RELEASE,
+        FT_EVENT_TYPE_POINTER_CLICK,
+        FT_EVENT_TYPE_REQUEST_UPDATE,
+        FT_EVENT_TYPE_MOVE,
+        FT_EVENT_TYPE_RESIZE,
+    }
+}
+
+internal class Foundation
 {
 #if BLUSHER_LIBFOUNDATION_DEV
     const string libfoundationSo = "/home/hardboiled65/dev/foundation/build/libfoundation.so";
@@ -83,6 +105,8 @@ public class Foundation
         FT_DESKTOP_SURFACE_ROLE_POPUP,
     }
 
+    public delegate void EventListener(IntPtr ftEvent);
+
     [DllImport(libfoundationSo)]
     public static extern bool ft_rect_contains_point(IntPtr rect, IntPtr point);
 
@@ -110,6 +134,10 @@ public class Foundation
     [DllImport(libfoundationSo)]
     public static extern IntPtr ft_surface_root_view(IntPtr surface);
 
+    [DllImport(libfoundationSo)]
+    public static extern void ft_surface_add_event_listener(IntPtr surface, Enums.ft_event_type eventType,
+        EventListener listener);
+
     //===================
     // View
     //===================
@@ -119,4 +147,11 @@ public class Foundation
     public static extern void ft_view_set_surface(IntPtr view, IntPtr surface);
     [DllImport(libfoundationSo)]
     public static extern void ft_view_set_color(IntPtr view, IntPtr color);
+
+    //==================
+    // Event
+    //==================
+    [DllImport(libfoundationSo)]
+    public static extern IntPtr ft_event_new(Enums.ft_event_target_type targetType, IntPtr target,
+        Enums.ft_event_type type);
 }

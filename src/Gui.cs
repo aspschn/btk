@@ -116,11 +116,34 @@ public class Window
         // Create a shadow.
         this._shadow = new View(ftView, new Rect(0.0F, 0.0F, 100.0F, 100.0F));
         this._shadow.Color = new Color(100, 100, 100, 80);
+
+        // Add event listeners.
+        this.AddResizeEventListener();
     }
 
     public void Show()
     {
         Foundation.ft_desktop_surface_show(this._ftDesktopSurface);
+    }
+
+    protected virtual void ResizeEvent()
+    {
+        Console.WriteLine("Window resize event.");
+    }
+
+    private void AddResizeEventListener()
+    {
+        IntPtr surface = Foundation.ft_desktop_surface_surface(this._ftDesktopSurface);
+        IntPtr resizeEvent = Foundation.ft_event_new(Enums.ft_event_target_type.FT_EVENT_TARGET_TYPE_SURFACE,
+            surface,
+            Enums.ft_event_type.FT_EVENT_TYPE_RESIZE);
+        var eventListener = new Foundation.EventListener(this.CallResizeEvent);
+        Foundation.ft_surface_add_event_listener(surface, Enums.ft_event_type.FT_EVENT_TYPE_RESIZE, eventListener);
+    }
+
+    private void CallResizeEvent(IntPtr ftEvent)
+    {
+        this.ResizeEvent();
     }
 
     private IntPtr _ftDesktopSurface;
