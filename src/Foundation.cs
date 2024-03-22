@@ -154,4 +154,10 @@ internal class Foundation
     [DllImport(libfoundationSo)]
     public static extern IntPtr ft_event_new(Enums.ft_event_target_type targetType, IntPtr target,
         Enums.ft_event_type type);
+
+    [DllImport(libfoundationSo)]
+    public static extern bool ft_event_propagation(IntPtr ftEvent);
+
+    [DllImport(libfoundationSo)]
+    public static extern void ft_event_set_propagation(IntPtr ftEvent, bool value);
 }

@@ -134,9 +134,6 @@ public class Window
     private void AddResizeEventListener()
     {
         IntPtr surface = Foundation.ft_desktop_surface_surface(this._ftDesktopSurface);
-        IntPtr resizeEvent = Foundation.ft_event_new(Enums.ft_event_target_type.FT_EVENT_TARGET_TYPE_SURFACE,
-            surface,
-            Enums.ft_event_type.FT_EVENT_TYPE_RESIZE);
         var eventListener = new Foundation.EventListener(this.CallResizeEvent);
         Foundation.ft_surface_add_event_listener(surface, Enums.ft_event_type.FT_EVENT_TYPE_RESIZE, eventListener);
     }
