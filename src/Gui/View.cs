@@ -12,7 +12,7 @@ public class View
     {
         // C functions.
         var ftParent = parent._ftView;
-        var ftGeometry = Foundation.ft_rect_t.FromRect(geometry);
+        var ftGeometry = ft_rect_t.FromRect(geometry);
         var ftGeometryCPtr = ftGeometry.AllocCPtr();
 
         this._ftView = Foundation.ft_view_new(ftParent, ftGeometryCPtr);
@@ -23,6 +23,12 @@ public class View
         this._parent = parent;
         this._geometry = geometry;
         this._color = new Color(255, 255, 255, 255);
+
+        // Parenting.
+        parent._children.Add(this);
+
+        // Add event listeners.
+        this.AddEventListeners();
     }
 
     /// <summary>
@@ -34,7 +40,7 @@ public class View
     /// <param name="geometry"></param>
     internal View(IntPtr rootView, Rect geometry)
     {
-        var ftGeometry = Foundation.ft_rect_t.FromRect(geometry);
+        var ftGeometry = ft_rect_t.FromRect(geometry);
         var ftGeometryCPtr = ftGeometry.AllocCPtr();
 
         this._ftView = Foundation.ft_view_new(rootView, ftGeometryCPtr);
@@ -45,6 +51,9 @@ public class View
         this._parent = null;
         this._geometry = geometry;
         this._color = new Color(255, 255, 255, 255);
+
+        // Add event listeners.
+        this.AddEventListeners();
     }
 
     public Rect Geometry
@@ -59,7 +68,7 @@ public class View
         {
             this._color = value;
 
-            var ftColor = Foundation.ft_color_t.FromColor(value);
+            var ftColor = ft_color_t.FromColor(value);
             var ftColorPtr = ftColor.AllocCPtr();
 
             Foundation.ft_view_set_color(this._ftView, ftColorPtr);
@@ -68,8 +77,46 @@ public class View
         }
     }
 
+    protected virtual void PointerEnterEvent(PointerEvent evt)
+    {
+        Console.WriteLine("View PointerEnterEvent");
+    }
+
+    protected virtual void PointerLeaveEvent(PointerEvent evt)
+    {
+        Console.WriteLine("View PointerLeaveEvent");
+    }
+
+    private void AddEventListeners()
+    {
+        IntPtr ftView = this._ftView;
+
+        var enterEventListener = new Foundation.EventListener(this.CallPointerEnterEvent);
+        Foundation.ft_view_add_event_listener(ftView, Foundation.FT_EVENT_TYPE_POINTER_ENTER, enterEventListener);
+
+        var leaveEventListener = new Foundation.EventListener(this.CallPointerLeaveEvent);
+        Foundation.ft_view_add_event_listener(ftView, Foundation.FT_EVENT_TYPE_POINTER_LEAVE, leaveEventListener);
+    }
+
+    private void CallPointerEnterEvent(IntPtr ftEvent)
+    {
+        // TODO: fill info.
+
+        var evt = new PointerEvent(EventType.PointerEnter);
+        this.PointerEnterEvent(evt);
+    }
+
+    private void CallPointerLeaveEvent(IntPtr ftEvent)
+    {
+        // TODO: fill info
+
+        var evt = new PointerEvent(EventType.PointerLeave);
+        this.PointerLeaveEvent(evt);
+    }
+
     private IntPtr _ftView;
     private View? _parent;
+    private List<View> _children = [];
     private Rect _geometry;
     private Color _color;
 }
