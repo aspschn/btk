@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <Reference Include="Blusher">
-      <HintPath>../bin/Release/net8.0/Blusher.dll</HintPath>
+      <HintPath>../build/Release/Blusher.dll</HintPath>
     </Reference>
   </ItemGroup>
 
