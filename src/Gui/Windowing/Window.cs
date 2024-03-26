@@ -30,9 +30,14 @@ public class Window
         // Add decoration.
         // - Add shadow.
         this._shadow = new WindowShadow(this);
+        // - Add resize.
+        this._resize = new WindowResize(this._shadow);
 
         // Set surface size.
         this.SurfaceSize = this.CalculateSurfaceSize();
+        if (this.HasDecoration) {
+            this.UpdateDecoration();
+        }
 
         // Add event listeners.
         this.AddResizeEventListener();
@@ -56,7 +61,16 @@ public class Window
             this._geometry.Size = value;
 
             // TODO: Set surface size and wm_geometry of desktop surface.
+            this.SurfaceSize = this.CalculateSurfaceSize();
+            if (this.HasDecoration) {
+                this.UpdateDecoration();
+            }
         }
+    }
+
+    public bool HasDecoration
+    {
+        get => true;
     }
 
     private Size SurfaceSize
@@ -88,11 +102,29 @@ public class Window
         return windowSize;
     }
 
+    private void UpdateDecoration()
+    {
+        var surfaceSize = this.CalculateSurfaceSize();
+        if (this._shadow != null) {
+            this._shadow.Geometry = new Rect(0F, 0F, surfaceSize.Width, surfaceSize.Height);
+        }
+
+        if (this._shadow != null && this._resize != null) {
+            this._resize.Geometry = new Rect(
+                _shadow.Thickness - _resize.Thickness,
+                _shadow.Thickness - _resize.Thickness,
+                surfaceSize.Width - (_shadow.Thickness * 2) + (_resize.Thickness * 2),
+                surfaceSize.Height - (_shadow.Thickness * 2) + (_resize.Thickness * 2)
+            );
+        }
+    }
+
     protected virtual void ResizeEvent(ResizeEvent evt)
     {
         Console.WriteLine("Window resize event.");
         Console.WriteLine(evt.Size.Width);
         Console.WriteLine(evt.Size.Height);
+        this.Size = evt.Size;
     }
 
     private void AddResizeEventListener()
@@ -116,6 +148,7 @@ public class Window
 
     private IntPtr _ftDesktopSurface;
     private WindowShadow? _shadow;
+    private WindowResize? _resize;
     private View _rootView;
     private Rect _geometry = new Rect(0.0F, 0.0F, 200.0F, 200.0F);
 }
