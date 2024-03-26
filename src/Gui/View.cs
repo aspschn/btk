@@ -59,6 +59,17 @@ public class View
     public Rect Geometry
     {
         get => this._geometry;
+        set
+        {
+            this._geometry = value;
+
+            var ftGeometry = ft_rect_t.FromRect(value);
+            var ftGeometryPtr = ftGeometry.AllocCPtr();
+
+            Foundation.ft_view_set_geometry(this._ftView, ftGeometryPtr);
+
+            Marshal.FreeHGlobal(ftGeometryPtr);
+        }
     }
 
     public Color Color

@@ -1,3 +1,5 @@
+namespace Blusher.Gui.Windowing;
+
 using System.Runtime.InteropServices;
 
 using Blusher.Foundation;
@@ -21,9 +23,16 @@ public class Window
         Foundation.ft_view_set_color(ftView, ftColor);
         Marshal.FreeHGlobal(ftColor);
 
-        // Create a root view.
+        // Create a root view. Blusher's root view is different from Foundation's root view.
         this._rootView = new View(ftView, new Rect(0.0F, 0.0F, 100.0F, 100.0F));
         this._rootView.Color = new Color(0, 0, 0, 0);
+
+        // Add decoration.
+        // - Add shadow.
+        this._shadow = new WindowShadow(this);
+
+        // Set surface size.
+        this.SurfaceSize = this.CalculateSurfaceSize();
 
         // Add event listeners.
         this.AddResizeEventListener();
@@ -39,6 +48,46 @@ public class Window
         get => this._rootView;
     }
 
+    public Size Size
+    {
+        get => this._geometry.Size;
+        set
+        {
+            this._geometry.Size = value;
+
+            // TODO: Set surface size and wm_geometry of desktop surface.
+        }
+    }
+
+    private Size SurfaceSize
+    {
+        set
+        {
+            IntPtr ftSurface = Foundation.ft_desktop_surface_surface(this._ftDesktopSurface);
+            var ftSize = ft_size_t.FromSize(value);
+            var ftSizePtr = ftSize.AllocCPtr();
+
+            Foundation.ft_surface_set_size(ftSurface, ftSizePtr);
+
+            Marshal.FreeHGlobal(ftSizePtr);
+        }
+    }
+
+    /// <summary>
+    /// Call this method after add the decoration.
+    /// </summary>
+    /// <returns></returns>
+    private Size CalculateSurfaceSize()
+    {
+        var windowSize = this.Size;
+        if (this._shadow != null) {
+            windowSize.Width += (this._shadow.Thickness * 2);
+            windowSize.Height += (this._shadow.Thickness * 2);
+        }
+
+        return windowSize;
+    }
+
     protected virtual void ResizeEvent(ResizeEvent evt)
     {
         Console.WriteLine("Window resize event.");
@@ -50,7 +99,7 @@ public class Window
     {
         IntPtr surface = Foundation.ft_desktop_surface_surface(this._ftDesktopSurface);
         var eventListener = new Foundation.EventListener(this.CallResizeEvent);
-        Foundation.ft_surface_add_event_listener(surface, Enums.ft_event_type.FT_EVENT_TYPE_RESIZE, eventListener);
+        Foundation.ft_surface_add_event_listener(surface, Foundation.FT_EVENT_TYPE_RESIZE, eventListener);
     }
 
     private void CallResizeEvent(IntPtr ftEvent)
@@ -67,6 +116,7 @@ public class Window
     }
 
     private IntPtr _ftDesktopSurface;
-    private View _shadow;
+    private WindowShadow? _shadow;
     private View _rootView;
+    private Rect _geometry = new Rect(0.0F, 0.0F, 200.0F, 200.0F);
 }

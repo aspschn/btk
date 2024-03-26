@@ -5,6 +5,7 @@ using System;
 
 using Blusher.Drawing;
 using Blusher.Gui;
+using Blusher.Gui.Windowing;
 
 public class Program
 {

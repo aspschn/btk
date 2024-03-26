@@ -15,6 +15,23 @@ internal struct ft_size_t
 {
     public float width;
     public float height;
+
+    internal static ft_size_t FromSize(Size size)
+    {
+        ft_size_t ret;
+        ret.width = size.Width;
+        ret.height = size.Height;
+
+        return ret;
+    }
+
+    internal IntPtr AllocCPtr()
+    {
+        IntPtr cPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ft_size_t)));
+        Marshal.StructureToPtr(this, cPtr, false);
+
+        return cPtr;
+    }
 }
 
 internal struct ft_rect_t
@@ -66,21 +83,6 @@ internal struct ft_color_t
         Marshal.StructureToPtr(this, cPtr, false);
 
         return cPtr;
-    }
-}
-
-internal class Enums
-{
-    public enum ft_event_type {
-        FT_EVENT_TYPE_POINTER_ENTER,
-        FT_EVENT_TYPE_POINTER_LEAVE,
-        FT_EVENT_TYPE_POINTER_MOVE,
-        FT_EVENT_TYPE_POINTER_PRESS,
-        FT_EVENT_TYPE_POINTER_RELEASE,
-        FT_EVENT_TYPE_POINTER_CLICK,
-        FT_EVENT_TYPE_REQUEST_UPDATE,
-        FT_EVENT_TYPE_MOVE,
-        FT_EVENT_TYPE_RESIZE,
     }
 }
 
@@ -141,9 +143,10 @@ internal class Foundation
     //===================
     [DllImport(LibfoundationSo)]
     public static extern IntPtr ft_surface_root_view(IntPtr surface);
-
     [DllImport(LibfoundationSo)]
-    public static extern void ft_surface_add_event_listener(IntPtr surface, Enums.ft_event_type eventType,
+    public static extern void ft_surface_set_size(IntPtr surface, IntPtr size);
+    [DllImport(LibfoundationSo)]
+    public static extern void ft_surface_add_event_listener(IntPtr surface, int eventType,
         EventListener listener);
 
     //===================
@@ -155,7 +158,8 @@ internal class Foundation
     public static extern void ft_view_set_surface(IntPtr view, IntPtr surface);
     [DllImport(LibfoundationSo)]
     public static extern void ft_view_set_color(IntPtr view, IntPtr color);
-
+    [DllImport(LibfoundationSo)]
+    public static extern void ft_view_set_geometry(IntPtr view, IntPtr geometry);
     [DllImport(LibfoundationSo)]
     public static extern void ft_view_add_event_listener(IntPtr view, int eventType, EventListener listener);
 
@@ -163,8 +167,7 @@ internal class Foundation
     // Event
     //==================
     [DllImport(LibfoundationSo)]
-    public static extern IntPtr ft_event_new(int targetType, IntPtr target,
-        Enums.ft_event_type type);
+    public static extern IntPtr ft_event_new(int targetType, IntPtr target, int type);
 
     [DllImport(LibfoundationSo)]
     public static extern bool ft_event_propagation(IntPtr ftEvent);
