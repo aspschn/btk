@@ -138,6 +138,10 @@ internal class Foundation
     [DllImport(LibfoundationSo)]
     public static extern void ft_desktop_surface_show(IntPtr desktopSurface);
 
+    [DllImport(LibfoundationSo)]
+    public static extern void ft_desktop_surface_add_event_listener(IntPtr desktopSurface, int eventType,
+        EventListener listener);
+
     //===================
     // Surface
     //===================
