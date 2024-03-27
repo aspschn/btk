@@ -13,7 +13,7 @@ public class WindowShadow : View
     {
         this._thickness = 40;
 
-        this.Color = new Color(255, 0, 0, 255);
+        this.Color = new Color(255, 0, 0, 100);
     }
 
     public uint Thickness

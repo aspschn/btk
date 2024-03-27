@@ -8,7 +8,7 @@ public class WindowResize : View
     {
         this._thickness = 5;
 
-        this.Color = new Color(0, 255, 0, 255);
+        this.Color = new Color(0, 255, 0, 100);
     }
 
     public uint Thickness

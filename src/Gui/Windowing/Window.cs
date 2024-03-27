@@ -39,15 +39,6 @@ public class Window
             this.UpdateDecoration();
         }
 
-        // Set WM geometry. This SHOULD done after Show.
-        var wmGeometry = this.CalculateWindowGeometry();
-        var ftWmGeometry = ft_rect_t.FromRect(wmGeometry);
-        var ftWmGeometryPtr = ftWmGeometry.AllocCPtr();
-
-        // Foundation.ft_desktop_surface_set_wm_geometry(_ftDesktopSurface, ftWmGeometryPtr);
-
-        Marshal.FreeHGlobal(ftWmGeometryPtr);
-
         // Add event listeners.
         this.AddResizeEventListener();
     }
@@ -55,6 +46,15 @@ public class Window
     public void Show()
     {
         Foundation.ft_desktop_surface_show(this._ftDesktopSurface);
+
+        // Set WM geometry. This SHOULD done after Show.
+        var wmGeometry = this.CalculateWindowGeometry();
+        var ftWmGeometry = ft_rect_t.FromRect(wmGeometry);
+        var ftWmGeometryPtr = ftWmGeometry.AllocCPtr();
+
+        Foundation.ft_desktop_surface_set_wm_geometry(_ftDesktopSurface, ftWmGeometryPtr);
+
+        Marshal.FreeHGlobal(ftWmGeometryPtr);
     }
 
     public View RootView
@@ -144,11 +144,12 @@ public class Window
         }
 
         if (this._shadow != null && this._resize != null) {
+            var shadowSize = _shadow.Geometry.Size;
             this._resize.Geometry = new Rect(
                 _shadow.Thickness - _resize.Thickness,
                 _shadow.Thickness - _resize.Thickness,
-                surfaceSize.Width - (_shadow.Thickness * 2) + (_resize.Thickness * 2),
-                surfaceSize.Height - (_shadow.Thickness * 2) + (_resize.Thickness * 2)
+                shadowSize.Width - (_shadow.Thickness * 2) + (_resize.Thickness * 2),
+                shadowSize.Height - (_shadow.Thickness * 2) + (_resize.Thickness * 2)
             );
         }
     }
