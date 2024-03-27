@@ -39,6 +39,15 @@ public class Window
             this.UpdateDecoration();
         }
 
+        // Set WM geometry. This SHOULD done after Show.
+        var wmGeometry = this.CalculateWindowGeometry();
+        var ftWmGeometry = ft_rect_t.FromRect(wmGeometry);
+        var ftWmGeometryPtr = ftWmGeometry.AllocCPtr();
+
+        // Foundation.ft_desktop_surface_set_wm_geometry(_ftDesktopSurface, ftWmGeometryPtr);
+
+        Marshal.FreeHGlobal(ftWmGeometryPtr);
+
         // Add event listeners.
         this.AddResizeEventListener();
     }
@@ -65,6 +74,14 @@ public class Window
             if (this.HasDecoration) {
                 this.UpdateDecoration();
             }
+
+            var wmGeometry = this.CalculateWindowGeometry();
+            var ftWmGeometry = ft_rect_t.FromRect(wmGeometry);
+            var ftWmGeometryPtr = ftWmGeometry.AllocCPtr();
+
+            Foundation.ft_desktop_surface_set_wm_geometry(_ftDesktopSurface, ftWmGeometryPtr);
+
+            Marshal.FreeHGlobal(ftWmGeometryPtr);
         }
     }
 
@@ -100,6 +117,23 @@ public class Window
         }
 
         return windowSize;
+    }
+
+    private Rect CalculateWindowGeometry()
+    {
+        var surfaceSize = this.CalculateSurfaceSize();
+
+        if (!this.HasDecoration) {
+            Rect geo = new Rect(0F, 0F, surfaceSize.Width, surfaceSize.Height);
+            return geo;
+        } else {
+            Rect geo = new Rect(
+                _shadow!.Thickness,
+                _shadow!.Thickness,
+                surfaceSize.Width - (_shadow!.Thickness * 2),
+                surfaceSize.Height - (_shadow!.Thickness * 2));
+            return geo;
+        }
     }
 
     private void UpdateDecoration()
