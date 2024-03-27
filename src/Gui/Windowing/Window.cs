@@ -31,7 +31,9 @@ public class Window
         // - Add shadow.
         this._shadow = new WindowShadow(this);
         // - Add resize.
-        this._resize = new WindowResize(this._shadow);
+        this._resize = new WindowResize(_shadow);
+        // - Add border.
+        this._border = new WindowBorder(_resize);
 
         // Set surface size.
         this.SurfaceSize = this.CalculateSurfaceSize();
@@ -152,6 +154,16 @@ public class Window
                 shadowSize.Height - (_shadow.Thickness * 2) + (_resize.Thickness * 2)
             );
         }
+
+        if (_border != null) {
+            var resizeSize = _resize!.Geometry.Size;
+            _border.Geometry = new Rect(
+                _resize!.Thickness - _border.Thickness,
+                _resize!.Thickness - _border.Thickness,
+                resizeSize.Width - (_resize.Thickness * 2) + (_border.Thickness * 2),
+                resizeSize.Height - (_resize.Thickness * 2) + (_border.Thickness * 2)
+            );
+        }
     }
 
     protected virtual void ResizeEvent(ResizeEvent evt)
@@ -184,6 +196,7 @@ public class Window
     private IntPtr _ftDesktopSurface;
     private WindowShadow? _shadow;
     private WindowResize? _resize;
+    private WindowBorder? _border;
     private View _rootView;
     private Rect _geometry = new Rect(0.0F, 0.0F, 200.0F, 200.0F);
 }
