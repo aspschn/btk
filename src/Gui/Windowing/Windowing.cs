@@ -7,7 +7,12 @@ using Blusher.Drawing;
 using Blusher.Gui;
 using Blusher.Events;
 
-public class WindowShadow : View
+public interface IWindowDecoration
+{
+    public uint Thickness { get; }
+}
+
+public class WindowShadow : View, IWindowDecoration
 {
     public WindowShadow(Window window) : base(window.RootView, new Rect(0.0F, 0.0F, 10.0F, 10.0F))
     {

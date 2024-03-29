@@ -184,6 +184,7 @@ internal class Foundation
 
     [DllImport(LibfoundationSo)]
     public static extern IntPtr ft_event_resize_old_size(IntPtr ftEvent);
+
     [DllImport(LibfoundationSo)]
     public static extern IntPtr ft_event_resize_size(IntPtr ftEvent);
 

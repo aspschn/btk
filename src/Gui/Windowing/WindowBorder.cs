@@ -3,7 +3,7 @@ namespace Blusher.Gui.Windowing;
 using Blusher.Drawing;
 using Blusher.Gui;
 
-public class WindowBorder : View
+public class WindowBorder : View, IWindowDecoration
 {
     public WindowBorder(View parent) : base(parent, new Rect(0F, 0F, 0F, 0F))
     {

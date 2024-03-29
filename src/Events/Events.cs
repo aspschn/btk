@@ -29,10 +29,14 @@ public class Event
 
     public bool Propagation
     {
-        get => this._propagation;
+        get
+        {
+            bool propagation = Foundation.ft_event_propagation(_ftEvent);
+            return propagation;
+        }
         set
         {
-            this._propagation = value;
+            Foundation.ft_event_set_propagation(_ftEvent, value);
         }
     }
 
@@ -43,7 +47,6 @@ public class Event
 
     private IntPtr _ftEvent;
     private EventType _eventType;
-    private bool _propagation = true;
 }
 
 public class ResizeEvent : Event

@@ -34,6 +34,8 @@ public class Window
         this._resize = new WindowResize(_shadow);
         // - Add border.
         this._border = new WindowBorder(_resize);
+        // - Add title bar.
+        this._titleBar = new TitleBar(_border);
 
         // Set surface size.
         this.SurfaceSize = this.CalculateSurfaceSize();
@@ -164,6 +166,16 @@ public class Window
                 resizeSize.Height - (_resize.Thickness * 2) + (_border.Thickness * 2)
             );
         }
+
+        if (_titleBar != null) {
+            var borderSize = _border!.Geometry.Size;
+            _titleBar.Geometry = new Rect(
+                _border!.Thickness,
+                _border!.Thickness,
+                borderSize.Width - (_border!.Thickness * 2),
+                _titleBar.Thickness
+            );
+        }
     }
 
     protected virtual void ResizeEvent(ResizeEvent evt)
@@ -197,6 +209,7 @@ public class Window
     private WindowShadow? _shadow;
     private WindowResize? _resize;
     private WindowBorder? _border;
+    private TitleBar? _titleBar;
     private View _rootView;
     private Rect _geometry = new Rect(0.0F, 0.0F, 200.0F, 200.0F);
 }

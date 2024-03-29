@@ -98,6 +98,21 @@ public class View
         Console.WriteLine("View PointerLeaveEvent");
     }
 
+    protected virtual void PointerMoveEvent(PointerEvent evt)
+    {
+        //
+    }
+
+    protected virtual void PointerPressEvent(PointerEvent evt)
+    {
+        // Console.WriteLine("View PointerPressEvent");
+    }
+
+    protected virtual void PointerReleaseEvent(PointerEvent evt)
+    {
+        //
+    }
+
     private void AddEventListeners()
     {
         IntPtr ftView = this._ftView;
@@ -107,6 +122,15 @@ public class View
 
         var leaveEventListener = new Foundation.EventListener(this.CallPointerLeaveEvent);
         Foundation.ft_view_add_event_listener(ftView, Foundation.FT_EVENT_TYPE_POINTER_LEAVE, leaveEventListener);
+
+        var moveEventListener = new Foundation.EventListener(this.CallPointerMoveEvent);
+        Foundation.ft_view_add_event_listener(ftView, Foundation.FT_EVENT_TYPE_POINTER_MOVE, moveEventListener);
+
+        var pressEventListener = new Foundation.EventListener(this.CallPointerPressEvent);
+        Foundation.ft_view_add_event_listener(ftView, Foundation.FT_EVENT_TYPE_POINTER_PRESS, pressEventListener);
+
+        var releaseEventListener = new Foundation.EventListener(this.CallPointerReleaseEvent);
+        Foundation.ft_view_add_event_listener(ftView, Foundation.FT_EVENT_TYPE_POINTER_RELEASE, releaseEventListener);
     }
 
     private void CallPointerEnterEvent(IntPtr ftEvent)
@@ -123,6 +147,30 @@ public class View
 
         var evt = new PointerEvent(EventType.PointerLeave);
         this.PointerLeaveEvent(evt);
+    }
+
+    private void CallPointerMoveEvent(IntPtr ftEvent)
+    {
+        // TODO: fill info
+
+        var evt = new PointerEvent(EventType.PointerMove);
+        this.PointerMoveEvent(evt);
+    }
+
+    private void CallPointerPressEvent(IntPtr ftEvent)
+    {
+        // TODO: fill info
+
+        var evt = new PointerEvent(EventType.PointerPress);
+        this.PointerPressEvent(evt);
+    }
+
+    private void CallPointerReleaseEvent(IntPtr ftEvent)
+    {
+        // TODO: fill info
+
+        var evt = new PointerEvent(EventType.PointerRelease);
+        this.PointerReleaseEvent(evt);
     }
 
     private IntPtr _ftView;

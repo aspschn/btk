@@ -2,7 +2,7 @@ namespace Blusher.Gui.Windowing;
 
 using Blusher.Drawing;
 
-public class WindowResize : View
+public class WindowResize : View, IWindowDecoration
 {
     public WindowResize(View parent) : base(parent, new Rect(0.0F, 0.0F, 10.0F, 10.0F))
     {
