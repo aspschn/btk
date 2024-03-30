@@ -104,6 +104,17 @@ internal class Foundation
     internal const int FT_DESKTOP_SURFACE_ROLE_TOPLEVEL = 0;
     internal const int FT_DESKTOP_SURFACE_ROLE_POPUP = 1;
 
+    // enum ft_desktop_surface_toplevel_resize_edge
+    internal const int FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_NONE = 0;
+    internal const int FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP             = 1;
+    internal const int FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM          = 2;
+    internal const int FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_LEFT            = 4;
+    internal const int FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP_LEFT        = 5;
+    internal const int FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM_LEFT     = 6;
+    internal const int FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_RIGHT           = 8;
+    internal const int FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP_RIGHT       = 9;
+    internal const int FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM_RIGHT    = 10;
+
     // enum ft_event_type
     internal const int FT_EVENT_TYPE_POINTER_ENTER= 10;
     internal const int FT_EVENT_TYPE_POINTER_LEAVE = 11;
@@ -137,6 +148,12 @@ internal class Foundation
     public static extern IntPtr ft_desktop_surface_surface(IntPtr desktopSurface);
     [DllImport(LibfoundationSo)]
     public static extern void ft_desktop_surface_show(IntPtr desktopSurface);
+
+    [DllImport(LibfoundationSo)]
+    public static extern void ft_desktop_surface_toplevel_move(IntPtr desktopSurface);
+
+    [DllImport(LibfoundationSo)]
+    public static extern void ft_desktop_surface_toplevel_resize(IntPtr desktopSurface, int edge);
 
     [DllImport(LibfoundationSo)]
     public static extern void ft_desktop_surface_set_wm_geometry(IntPtr desktopSurface, IntPtr geometry);

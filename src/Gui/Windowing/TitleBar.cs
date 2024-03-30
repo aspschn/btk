@@ -5,9 +5,11 @@ using Blusher.Gui;
 
 public class TitleBar : View, IWindowDecoration
 {
-    public TitleBar(View parent) : base(parent, new Rect(0F, 0F, 10F, 10F))
+    public TitleBar(Window window, View parent) : base(parent, new Rect(0F, 0F, 10F, 10F))
     {
         _thickness = 30;
+        _window = window;
+        this.Pressed = false;
     }
 
     public uint Thickness
@@ -15,11 +17,27 @@ public class TitleBar : View, IWindowDecoration
         get => _thickness;
     }
 
+    private bool Pressed { get; set; }
+
+    protected override void PointerMoveEvent(PointerEvent evt)
+    {
+        if (Pressed) {
+            _window.StartMove();
+        }
+
+        // evt.Propagation = false;
+
+        base.PointerMoveEvent(evt);
+    }
+
     protected override void PointerPressEvent(PointerEvent evt)
     {
         Console.WriteLine("Title bar pressed.");
+        Pressed = true;
+
         base.PointerPressEvent(evt);
     }
 
     private uint _thickness;
+    private Window _window;
 }

@@ -33,9 +33,9 @@ public class Window
         // - Add resize.
         this._resize = new WindowResize(_shadow);
         // - Add border.
-        this._border = new WindowBorder(_resize);
+        this._border = new WindowBorder(this, _resize);
         // - Add title bar.
-        this._titleBar = new TitleBar(_border);
+        this._titleBar = new TitleBar(this, _border);
 
         // Set surface size.
         this.SurfaceSize = this.CalculateSurfaceSize();
@@ -92,6 +92,30 @@ public class Window
     public bool HasDecoration
     {
         get => true;
+    }
+
+    public void StartMove()
+    {
+        Foundation.ft_desktop_surface_toplevel_move(_ftDesktopSurface);
+    }
+
+    public void StartResize(ResizeEdge resizeEdge)
+    {
+        int ftEdge = resizeEdge switch
+        {
+            ResizeEdge.None => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_NONE,
+            ResizeEdge.Top => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP,
+            ResizeEdge.Bottom => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM,
+            ResizeEdge.Left => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_LEFT,
+            ResizeEdge.TopLeft => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP_LEFT,
+            ResizeEdge.BottomLeft => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM_LEFT,
+            ResizeEdge.Right => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_RIGHT,
+            ResizeEdge.TopRight => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP_RIGHT,
+            ResizeEdge.BottomRight => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM_RIGHT,
+            _ => 0
+        };
+
+        Foundation.ft_desktop_surface_toplevel_resize(_ftDesktopSurface, ftEdge);
     }
 
     private Size SurfaceSize
