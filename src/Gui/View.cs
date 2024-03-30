@@ -138,6 +138,8 @@ public class View
         // TODO: fill info.
 
         var evt = new PointerEvent(EventType.PointerEnter);
+        evt.SetFoundationEvent(ftEvent);
+
         this.PointerEnterEvent(evt);
     }
 
@@ -146,6 +148,8 @@ public class View
         // TODO: fill info
 
         var evt = new PointerEvent(EventType.PointerLeave);
+        evt.SetFoundationEvent(ftEvent);
+
         this.PointerLeaveEvent(evt);
     }
 
@@ -154,6 +158,8 @@ public class View
         // TODO: fill info
 
         var evt = new PointerEvent(EventType.PointerMove);
+        evt.SetFoundationEvent(ftEvent);
+
         this.PointerMoveEvent(evt);
     }
 
@@ -162,6 +168,8 @@ public class View
         // TODO: fill info
 
         var evt = new PointerEvent(EventType.PointerPress);
+        evt.SetFoundationEvent(ftEvent);
+
         this.PointerPressEvent(evt);
     }
 
@@ -170,6 +178,8 @@ public class View
         // TODO: fill info
 
         var evt = new PointerEvent(EventType.PointerRelease);
+        evt.SetFoundationEvent(ftEvent);
+
         this.PointerReleaseEvent(evt);
     }
 

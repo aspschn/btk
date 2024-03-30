@@ -25,14 +25,14 @@ public class TitleBar : View, IWindowDecoration
             _window.StartMove();
         }
 
-        // evt.Propagation = false;
+        evt.Propagation = false;
 
         base.PointerMoveEvent(evt);
     }
 
     protected override void PointerPressEvent(PointerEvent evt)
     {
-        Console.WriteLine("Title bar pressed.");
+        Console.WriteLine(">>> Title bar pressed.");
         Pressed = true;
 
         base.PointerPressEvent(evt);

@@ -194,10 +194,11 @@ internal class Foundation
     public static extern IntPtr ft_event_new(int targetType, IntPtr target, int type);
 
     [DllImport(LibfoundationSo)]
+    [return: MarshalAs(UnmanagedType.I1)]
     public static extern bool ft_event_propagation(IntPtr ftEvent);
 
     [DllImport(LibfoundationSo)]
-    public static extern void ft_event_set_propagation(IntPtr ftEvent, bool value);
+    public static extern void ft_event_set_propagation(IntPtr ftEvent, [MarshalAs(UnmanagedType.I1)]bool value);
 
     [DllImport(LibfoundationSo)]
     public static extern IntPtr ft_event_resize_old_size(IntPtr ftEvent);
