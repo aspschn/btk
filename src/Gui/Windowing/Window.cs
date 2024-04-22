@@ -73,6 +73,8 @@ public class Window
         {
             this._geometry.Size = value;
 
+            // TODO: Set the root view size.
+
             // TODO: Set surface size and wm_geometry of desktop surface.
             this.SurfaceSize = this.CalculateSurfaceSize();
             if (this.HasDecoration) {

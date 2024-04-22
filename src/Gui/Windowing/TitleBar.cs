@@ -38,6 +38,13 @@ public class TitleBar : View, IWindowDecoration
         base.PointerPressEvent(evt);
     }
 
+    protected override void PointerReleaseEvent(PointerEvent evt)
+    {
+        Pressed = false;
+
+        base.PointerReleaseEvent(evt);
+    }
+
     private uint _thickness;
     private Window _window;
 }
