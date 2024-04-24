@@ -63,6 +63,22 @@ public class Surface
         }
     }
 
+    public Rect WMGeometry
+    {
+        get
+        {
+            // TODO: Implementation.
+            return new Rect(0F, 0F, 0F, 0F);
+        }
+        set
+        {
+            var sbRect = sb_rect_t.FromRect(value);
+            var sbRectPtr = sbRect.AllocCPtr();
+            Swingby.sb_desktop_surface_set_wm_geometry(_sbDesktopSurface, sbRectPtr);
+            Marshal.FreeHGlobal(sbRectPtr);
+        }
+    }
+
     public void Show()
     {
         Swingby.sb_desktop_surface_show(_sbDesktopSurface);
