@@ -185,6 +185,9 @@ internal class Swingby
     internal static extern IntPtr sb_surface_root_view(IntPtr surface);
 
     [DllImport(Libswingby)]
+    internal static extern IntPtr sb_surface_size(IntPtr surface);
+
+    [DllImport(Libswingby)]
     internal static extern void sb_surface_set_size(IntPtr surface, IntPtr size);
 
     [DllImport(Libswingby)]

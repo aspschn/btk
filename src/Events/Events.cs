@@ -22,6 +22,12 @@ public class Event
         this._eventType = eventType;
     }
 
+    internal Event(IntPtr sbEvent)
+    {
+        _sbEvent = sbEvent;
+        _eventType = 0; // TODO: Get from Swingby event object.
+    }
+
     public EventType EventType
     {
         get => this._eventType;
@@ -31,21 +37,21 @@ public class Event
     {
         get
         {
-            bool propagation = Foundation.ft_event_propagation(_ftEvent);
+            bool propagation = Foundation.ft_event_propagation(_sbEvent);
             return propagation;
         }
         set
         {
-            Foundation.ft_event_set_propagation(_ftEvent, value);
+            Foundation.ft_event_set_propagation(_sbEvent, value);
         }
     }
 
     internal void SetFoundationEvent(IntPtr ftEvent)
     {
-        this._ftEvent = ftEvent;
+        this._sbEvent = ftEvent;
     }
 
-    private IntPtr _ftEvent;
+    private IntPtr _sbEvent;
     private EventType _eventType;
 }
 

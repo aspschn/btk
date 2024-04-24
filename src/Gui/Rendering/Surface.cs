@@ -42,6 +42,27 @@ public class Surface
         }
     }
 
+    public Size Size
+    {
+        get
+        {
+            IntPtr sbSurface = Swingby.sb_desktop_surface_surface(_sbDesktopSurface);
+            IntPtr sbSize = Swingby.sb_surface_size(sbSurface);
+            float width = Swingby.sb_size_width(sbSize);
+            float height = Swingby.sb_size_height(sbSize);
+
+            return new Size(width, height);
+        }
+        set
+        {
+            IntPtr sbSurface = Swingby.sb_desktop_surface_surface(_sbDesktopSurface);
+            var sbSize = sb_size_t.FromSize(value);
+            var sbSizePtr = sbSize.AllocCPtr();
+            Swingby.sb_surface_set_size(sbSurface, sbSizePtr);
+            Marshal.FreeHGlobal(sbSizePtr);
+        }
+    }
+
     public void Show()
     {
         Swingby.sb_desktop_surface_show(_sbDesktopSurface);
@@ -52,6 +73,6 @@ public class Surface
         Swingby.sb_desktop_surface_hide(_sbDesktopSurface);
     }
 
-    private IntPtr _sbDesktopSurface;
+    protected IntPtr _sbDesktopSurface;
     private Surface? _parent;
 }
