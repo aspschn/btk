@@ -201,6 +201,9 @@ internal class Swingby
     internal static extern void sb_view_set_surface(IntPtr view, IntPtr surface);
 
     [DllImport(Libswingby)]
+    internal static extern IntPtr sb_view_color(IntPtr view);
+
+    [DllImport(Libswingby)]
     internal static extern void sb_view_set_color(IntPtr view, IntPtr color);
 
     [DllImport(Libswingby)]
