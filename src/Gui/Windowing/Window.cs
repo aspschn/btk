@@ -2,25 +2,25 @@ namespace Blusher.Gui.Windowing;
 
 using System.Runtime.InteropServices;
 
-using Blusher.Foundation;
 using Blusher.Drawing;
 using Blusher.Gui;
 using Blusher.Events;
+using Blusher.Swingby;
 
 public class Window
 {
     public Window()
     {
-        this._ftDesktopSurface = Foundation.ft_desktop_surface_new(
-            Foundation.FT_DESKTOP_SURFACE_ROLE_TOPLEVEL);
+        this._ftDesktopSurface = Swingby.sb_desktop_surface_new(
+            Swingby.SB_DESKTOP_SURFACE_ROLE_TOPLEVEL);
 
         // Set the root view color as transparent.
-        IntPtr ftSurface = Foundation.ft_desktop_surface_surface(this._ftDesktopSurface);
-        IntPtr ftView = Foundation.ft_surface_root_view(ftSurface);
-        ft_color_t color = ft_color_t.FromColor(new Color(0, 0, 0, 0));
+        IntPtr ftSurface = Swingby.sb_desktop_surface_surface(this._ftDesktopSurface);
+        IntPtr ftView = Swingby.sb_surface_root_view(ftSurface);
+        sb_color_t color = sb_color_t.FromColor(new Color(0, 0, 0, 0));
 
         IntPtr ftColor = color.AllocCPtr();
-        Foundation.ft_view_set_color(ftView, ftColor);
+        Swingby.sb_view_set_color(ftView, ftColor);
         Marshal.FreeHGlobal(ftColor);
 
         // Create a root view. Blusher's root view is different from Foundation's root view.
@@ -49,14 +49,14 @@ public class Window
 
     public void Show()
     {
-        Foundation.ft_desktop_surface_show(this._ftDesktopSurface);
+        Swingby.sb_desktop_surface_show(this._ftDesktopSurface);
 
         // Set WM geometry. This SHOULD done after Show.
         var wmGeometry = this.CalculateWindowGeometry();
-        var ftWmGeometry = ft_rect_t.FromRect(wmGeometry);
+        var ftWmGeometry = sb_rect_t.FromRect(wmGeometry);
         var ftWmGeometryPtr = ftWmGeometry.AllocCPtr();
 
-        Foundation.ft_desktop_surface_set_wm_geometry(_ftDesktopSurface, ftWmGeometryPtr);
+        Swingby.sb_desktop_surface_set_wm_geometry(_ftDesktopSurface, ftWmGeometryPtr);
 
         Marshal.FreeHGlobal(ftWmGeometryPtr);
     }
@@ -82,10 +82,10 @@ public class Window
             }
 
             var wmGeometry = this.CalculateWindowGeometry();
-            var ftWmGeometry = ft_rect_t.FromRect(wmGeometry);
+            var ftWmGeometry = sb_rect_t.FromRect(wmGeometry);
             var ftWmGeometryPtr = ftWmGeometry.AllocCPtr();
 
-            Foundation.ft_desktop_surface_set_wm_geometry(_ftDesktopSurface, ftWmGeometryPtr);
+            Swingby.sb_desktop_surface_set_wm_geometry(_ftDesktopSurface, ftWmGeometryPtr);
 
             Marshal.FreeHGlobal(ftWmGeometryPtr);
         }
@@ -98,37 +98,37 @@ public class Window
 
     public void StartMove()
     {
-        Foundation.ft_desktop_surface_toplevel_move(_ftDesktopSurface);
+        Swingby.sb_desktop_surface_toplevel_move(_ftDesktopSurface);
     }
 
     public void StartResize(ResizeEdge resizeEdge)
     {
         int ftEdge = resizeEdge switch
         {
-            ResizeEdge.None => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_NONE,
-            ResizeEdge.Top => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP,
-            ResizeEdge.Bottom => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM,
-            ResizeEdge.Left => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_LEFT,
-            ResizeEdge.TopLeft => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP_LEFT,
-            ResizeEdge.BottomLeft => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM_LEFT,
-            ResizeEdge.Right => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_RIGHT,
-            ResizeEdge.TopRight => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP_RIGHT,
-            ResizeEdge.BottomRight => Foundation.FT_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM_RIGHT,
+            ResizeEdge.None => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_NONE,
+            ResizeEdge.Top => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP,
+            ResizeEdge.Bottom => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM,
+            ResizeEdge.Left => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_LEFT,
+            ResizeEdge.TopLeft => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP_LEFT,
+            ResizeEdge.BottomLeft => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM_LEFT,
+            ResizeEdge.Right => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_RIGHT,
+            ResizeEdge.TopRight => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP_RIGHT,
+            ResizeEdge.BottomRight => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM_RIGHT,
             _ => 0
         };
 
-        Foundation.ft_desktop_surface_toplevel_resize(_ftDesktopSurface, ftEdge);
+        Swingby.sb_desktop_surface_toplevel_resize(_ftDesktopSurface, ftEdge);
     }
 
     private Size SurfaceSize
     {
         set
         {
-            IntPtr ftSurface = Foundation.ft_desktop_surface_surface(this._ftDesktopSurface);
-            var ftSize = ft_size_t.FromSize(value);
+            IntPtr ftSurface = Swingby.sb_desktop_surface_surface(this._ftDesktopSurface);
+            var ftSize = sb_size_t.FromSize(value);
             var ftSizePtr = ftSize.AllocCPtr();
 
-            Foundation.ft_surface_set_size(ftSurface, ftSizePtr);
+            Swingby.sb_surface_set_size(ftSurface, ftSizePtr);
 
             Marshal.FreeHGlobal(ftSizePtr);
         }
@@ -214,18 +214,18 @@ public class Window
 
     private void AddResizeEventListener()
     {
-        var eventListener = new Foundation.EventListener(this.CallResizeEvent);
-        Foundation.ft_desktop_surface_add_event_listener(this._ftDesktopSurface, Foundation.FT_EVENT_TYPE_RESIZE, eventListener);
+        var eventListener = new Swingby.EventListener(this.CallResizeEvent);
+        Swingby.sb_desktop_surface_add_event_listener(this._ftDesktopSurface, Swingby.SB_EVENT_TYPE_RESIZE, eventListener);
     }
 
     private void CallResizeEvent(IntPtr ftEvent)
     {
-        IntPtr oldSize = Foundation.ft_event_resize_size(ftEvent);
-        var oldWidth = Foundation.ft_size_width(oldSize);
-        var oldHeight = Foundation.ft_size_height(oldSize);
-        IntPtr size = Foundation.ft_event_resize_size(ftEvent);
-        var width = Foundation.ft_size_width(size);
-        var height = Foundation.ft_size_height(size);
+        IntPtr oldSize = Swingby.sb_event_resize_size(ftEvent);
+        var oldWidth = Swingby.sb_size_width(oldSize);
+        var oldHeight = Swingby.sb_size_height(oldSize);
+        IntPtr size = Swingby.sb_event_resize_size(ftEvent);
+        var width = Swingby.sb_size_width(size);
+        var height = Swingby.sb_size_height(size);
 
         ResizeEvent evt = new ResizeEvent(new Size(oldWidth, oldHeight), new Size(width, height));
         this.ResizeEvent(evt);

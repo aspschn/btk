@@ -2,9 +2,9 @@ namespace Blusher.Gui;
 
 using System.Runtime.InteropServices;
 
-using Blusher.Foundation;
 using Blusher.Drawing;
 using Blusher.Events;
+using Blusher.Swingby;
 
 public class View
 {
@@ -12,10 +12,10 @@ public class View
     {
         // C functions.
         var ftParent = parent._ftView;
-        var ftGeometry = ft_rect_t.FromRect(geometry);
+        var ftGeometry = sb_rect_t.FromRect(geometry);
         var ftGeometryCPtr = ftGeometry.AllocCPtr();
 
-        this._ftView = Foundation.ft_view_new(ftParent, ftGeometryCPtr);
+        this._ftView = Swingby.sb_view_new(ftParent, ftGeometryCPtr);
 
         Marshal.FreeHGlobal(ftGeometryCPtr);
 
@@ -40,10 +40,10 @@ public class View
     /// <param name="geometry"></param>
     internal View(IntPtr rootView, Rect geometry)
     {
-        var ftGeometry = ft_rect_t.FromRect(geometry);
+        var ftGeometry = sb_rect_t.FromRect(geometry);
         var ftGeometryCPtr = ftGeometry.AllocCPtr();
 
-        this._ftView = Foundation.ft_view_new(rootView, ftGeometryCPtr);
+        this._ftView = Swingby.sb_view_new(rootView, ftGeometryCPtr);
 
         Marshal.FreeHGlobal(ftGeometryCPtr);
 
@@ -63,10 +63,10 @@ public class View
         {
             this._geometry = value;
 
-            var ftGeometry = ft_rect_t.FromRect(value);
+            var ftGeometry = sb_rect_t.FromRect(value);
             var ftGeometryPtr = ftGeometry.AllocCPtr();
 
-            Foundation.ft_view_set_geometry(this._ftView, ftGeometryPtr);
+            Swingby.sb_view_set_geometry(this._ftView, ftGeometryPtr);
 
             Marshal.FreeHGlobal(ftGeometryPtr);
         }
@@ -79,10 +79,10 @@ public class View
         {
             this._color = value;
 
-            var ftColor = ft_color_t.FromColor(value);
+            var ftColor = sb_color_t.FromColor(value);
             var ftColorPtr = ftColor.AllocCPtr();
 
-            Foundation.ft_view_set_color(this._ftView, ftColorPtr);
+            Swingby.sb_view_set_color(this._ftView, ftColorPtr);
 
             Marshal.FreeHGlobal(ftColorPtr);
         }
@@ -117,20 +117,20 @@ public class View
     {
         IntPtr ftView = this._ftView;
 
-        var enterEventListener = new Foundation.EventListener(this.CallPointerEnterEvent);
-        Foundation.ft_view_add_event_listener(ftView, Foundation.FT_EVENT_TYPE_POINTER_ENTER, enterEventListener);
+        var enterEventListener = new Swingby.EventListener(this.CallPointerEnterEvent);
+        Swingby.sb_view_add_event_listener(ftView, Swingby.SB_EVENT_TYPE_POINTER_ENTER, enterEventListener);
 
-        var leaveEventListener = new Foundation.EventListener(this.CallPointerLeaveEvent);
-        Foundation.ft_view_add_event_listener(ftView, Foundation.FT_EVENT_TYPE_POINTER_LEAVE, leaveEventListener);
+        var leaveEventListener = new Swingby.EventListener(this.CallPointerLeaveEvent);
+        Swingby.sb_view_add_event_listener(ftView, Swingby.SB_EVENT_TYPE_POINTER_LEAVE, leaveEventListener);
 
-        var moveEventListener = new Foundation.EventListener(this.CallPointerMoveEvent);
-        Foundation.ft_view_add_event_listener(ftView, Foundation.FT_EVENT_TYPE_POINTER_MOVE, moveEventListener);
+        var moveEventListener = new Swingby.EventListener(this.CallPointerMoveEvent);
+        Swingby.sb_view_add_event_listener(ftView, Swingby.SB_EVENT_TYPE_POINTER_MOVE, moveEventListener);
 
-        var pressEventListener = new Foundation.EventListener(this.CallPointerPressEvent);
-        Foundation.ft_view_add_event_listener(ftView, Foundation.FT_EVENT_TYPE_POINTER_PRESS, pressEventListener);
+        var pressEventListener = new Swingby.EventListener(this.CallPointerPressEvent);
+        Swingby.sb_view_add_event_listener(ftView, Swingby.SB_EVENT_TYPE_POINTER_PRESS, pressEventListener);
 
-        var releaseEventListener = new Foundation.EventListener(this.CallPointerReleaseEvent);
-        Foundation.ft_view_add_event_listener(ftView, Foundation.FT_EVENT_TYPE_POINTER_RELEASE, releaseEventListener);
+        var releaseEventListener = new Swingby.EventListener(this.CallPointerReleaseEvent);
+        Swingby.sb_view_add_event_listener(ftView, Swingby.SB_EVENT_TYPE_POINTER_RELEASE, releaseEventListener);
     }
 
     private void CallPointerEnterEvent(IntPtr ftEvent)

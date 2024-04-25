@@ -2,10 +2,10 @@ namespace Blusher.Gui.Windowing;
 
 using System.Runtime.InteropServices;
 
-using Blusher.Foundation;
 using Blusher.Drawing;
 using Blusher.Gui;
 using Blusher.Events;
+using Blusher.Swingby;
 
 public interface IWindowDecoration
 {

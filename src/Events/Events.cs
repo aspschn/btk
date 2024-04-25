@@ -1,7 +1,7 @@
 namespace Blusher.Events;
 
 using Blusher.Drawing;
-using Blusher.Foundation;
+using Blusher.Swingby;
 
 public enum EventType
 {
@@ -37,12 +37,12 @@ public class Event
     {
         get
         {
-            bool propagation = Foundation.ft_event_propagation(_sbEvent);
+            bool propagation = Swingby.sb_event_propagation(_sbEvent);
             return propagation;
         }
         set
         {
-            Foundation.ft_event_set_propagation(_sbEvent, value);
+            Swingby.sb_event_set_propagation(_sbEvent, value);
         }
     }
 

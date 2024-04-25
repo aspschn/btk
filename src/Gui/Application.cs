@@ -1,6 +1,6 @@
 namespace Blusher.Gui;
 
-using Blusher.Foundation;
+using Blusher.Swingby;
 
 /// <summary>
 /// A global application object.
@@ -11,13 +11,13 @@ public class Application
     {
         int argc = args.Length;
 
-        this._ftApplication = Foundation.ft_application_new(argc, args);
+        this._sbApplication = Swingby.sb_application_new(argc, args);
     }
 
     public int Exec()
     {
-        return Foundation.ft_application_exec(this._ftApplication);
+        return Swingby.sb_application_exec(this._sbApplication);
     }
 
-    private IntPtr _ftApplication;
+    private IntPtr _sbApplication;
 }
