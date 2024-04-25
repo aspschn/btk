@@ -4,32 +4,27 @@ using System.Runtime.InteropServices;
 
 using Blusher.Drawing;
 using Blusher.Gui;
+using Blusher.Gui.Rendering;
 using Blusher.Events;
 using Blusher.Swingby;
 
-public class Window
+public class Window : Surface
 {
-    public Window()
+    public Window() : base(SurfaceRole.Toplevel)
     {
-        this._ftDesktopSurface = Swingby.sb_desktop_surface_new(
-            Swingby.SB_DESKTOP_SURFACE_ROLE_TOPLEVEL);
-
         // Set the root view color as transparent.
-        IntPtr ftSurface = Swingby.sb_desktop_surface_surface(this._ftDesktopSurface);
-        IntPtr ftView = Swingby.sb_surface_root_view(ftSurface);
-        sb_color_t color = sb_color_t.FromColor(new Color(0, 0, 0, 0));
+        base.RootViewColor = new Color(0, 0, 0, 0);
 
-        IntPtr ftColor = color.AllocCPtr();
-        Swingby.sb_view_set_color(ftView, ftColor);
-        Marshal.FreeHGlobal(ftColor);
+        IntPtr sbSurface = Swingby.sb_desktop_surface_surface(this._sbDesktopSurface);
+        IntPtr sbRootView = Swingby.sb_surface_root_view(sbSurface);
 
-        // Create a root view. Blusher's root view is different from Foundation's root view.
-        this._rootView = new View(ftView, new Rect(0.0F, 0.0F, 100.0F, 100.0F));
-        this._rootView.Color = new Color(0, 0, 0, 0);
+        // Create a body view.
+        _body = new View(sbRootView, new Rect(0.0f, 0.0f, 200.0f, 200.0f));
+        _body.Color = new Color(255, 255, 255, 255);
 
         // Add decoration.
         // - Add shadow.
-        this._shadow = new WindowShadow(this);
+        this._shadow = new WindowShadow(this, sbRootView);
         // - Add resize.
         this._resize = new WindowResize(_shadow);
         // - Add border.
@@ -39,6 +34,7 @@ public class Window
 
         // Set surface size.
         this.SurfaceSize = this.CalculateSurfaceSize();
+        _body.Geometry = CalculateBodyGeometry();
         if (this.HasDecoration) {
             this.UpdateDecoration();
         }
@@ -49,29 +45,35 @@ public class Window
 
     public void Show()
     {
-        Swingby.sb_desktop_surface_show(this._ftDesktopSurface);
+        base.Show();
 
-        // Set WM geometry. This SHOULD done after Show.
-        var wmGeometry = this.CalculateWindowGeometry();
-        var ftWmGeometry = sb_rect_t.FromRect(wmGeometry);
-        var ftWmGeometryPtr = ftWmGeometry.AllocCPtr();
-
-        Swingby.sb_desktop_surface_set_wm_geometry(_ftDesktopSurface, ftWmGeometryPtr);
-
-        Marshal.FreeHGlobal(ftWmGeometryPtr);
+        // Set WM geometry. This SHOULD be done after Show.
+        base.WMGeometry = CalculateWindowGeometry();
     }
 
-    public View RootView
+    /// <summary>
+    /// Size of the window frame. The frame contain it's border and the title bar.
+    /// </summary>
+    public Size FrameSize
     {
-        get => this._rootView;
+        get
+        {
+            // TODO: Implementation.
+            return new Size(0f, 0f);
+        }
     }
 
+    /// <summary>
+    /// Size of the body area.
+    /// </summary>
     public Size Size
     {
-        get => this._geometry.Size;
+        get => this._body.Geometry.Size;
         set
         {
-            this._geometry.Size = value;
+            Console.WriteLine("Size setter");
+            var prevGeo = _body.Geometry;
+            _body.Geometry = new Rect(prevGeo.X, prevGeo.Y, value.Width, value.Height);
 
             // TODO: Set the root view size.
 
@@ -81,13 +83,8 @@ public class Window
                 this.UpdateDecoration();
             }
 
-            var wmGeometry = this.CalculateWindowGeometry();
-            var ftWmGeometry = sb_rect_t.FromRect(wmGeometry);
-            var ftWmGeometryPtr = ftWmGeometry.AllocCPtr();
-
-            Swingby.sb_desktop_surface_set_wm_geometry(_ftDesktopSurface, ftWmGeometryPtr);
-
-            Marshal.FreeHGlobal(ftWmGeometryPtr);
+            // Update WM geometry.
+            // TODO.
         }
     }
 
@@ -96,14 +93,16 @@ public class Window
         get => true;
     }
 
+    public View Body => _body;
+
     public void StartMove()
     {
-        Swingby.sb_desktop_surface_toplevel_move(_ftDesktopSurface);
+        Swingby.sb_desktop_surface_toplevel_move(base._sbDesktopSurface);
     }
 
     public void StartResize(ResizeEdge resizeEdge)
     {
-        int ftEdge = resizeEdge switch
+        int sbEdge = resizeEdge switch
         {
             ResizeEdge.None => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_NONE,
             ResizeEdge.Top => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP,
@@ -117,20 +116,18 @@ public class Window
             _ => 0
         };
 
-        Swingby.sb_desktop_surface_toplevel_resize(_ftDesktopSurface, ftEdge);
+        Swingby.sb_desktop_surface_toplevel_resize(base._sbDesktopSurface, sbEdge);
     }
 
+    /// <summary>
+    /// Entire surface size. Include decorations such as shadow.
+    /// </summary>
     private Size SurfaceSize
     {
+        get => base.Size;
         set
         {
-            IntPtr ftSurface = Swingby.sb_desktop_surface_surface(this._ftDesktopSurface);
-            var ftSize = sb_size_t.FromSize(value);
-            var ftSizePtr = ftSize.AllocCPtr();
-
-            Swingby.sb_surface_set_size(ftSurface, ftSizePtr);
-
-            Marshal.FreeHGlobal(ftSizePtr);
+            base.Size = value;
         }
     }
 
@@ -140,13 +137,13 @@ public class Window
     /// <returns></returns>
     private Size CalculateSurfaceSize()
     {
-        var windowSize = this.Size;
+        var surfaceSize = Size;
         if (this._shadow != null) {
-            windowSize.Width += (this._shadow.Thickness * 2);
-            windowSize.Height += (this._shadow.Thickness * 2);
+            surfaceSize.Width += (this._shadow.Thickness * 2);
+            surfaceSize.Height += (this._shadow.Thickness * 2);
         }
 
-        return windowSize;
+        return surfaceSize;
     }
 
     private Rect CalculateWindowGeometry()
@@ -164,6 +161,17 @@ public class Window
                 surfaceSize.Height - (_shadow!.Thickness * 2));
             return geo;
         }
+    }
+
+    /// <summary>
+    /// Calculate the absolute geometry of the body view.
+    /// </summary>
+    /// <returns></returns>
+    private Rect CalculateBodyGeometry()
+    {
+        var width = _body.Geometry.Width;
+        var height = _body.Geometry.Height;
+        return new Rect(50.0f, 50.0f, width, height);
     }
 
     private void UpdateDecoration()
@@ -214,8 +222,8 @@ public class Window
 
     private void AddResizeEventListener()
     {
-        var eventListener = new Swingby.EventListener(this.CallResizeEvent);
-        Swingby.sb_desktop_surface_add_event_listener(this._ftDesktopSurface, Swingby.SB_EVENT_TYPE_RESIZE, eventListener);
+        var eventListener = new Swingby.EventListener(CallResizeEvent);
+        Swingby.sb_desktop_surface_add_event_listener(base._sbDesktopSurface, Swingby.SB_EVENT_TYPE_RESIZE, eventListener);
     }
 
     private void CallResizeEvent(IntPtr ftEvent)
@@ -231,11 +239,10 @@ public class Window
         this.ResizeEvent(evt);
     }
 
-    private IntPtr _ftDesktopSurface;
     private WindowShadow? _shadow;
     private WindowResize? _resize;
     private WindowBorder? _border;
     private TitleBar? _titleBar;
-    private View _rootView;
+    private View _body;
     private Rect _geometry = new Rect(0.0F, 0.0F, 200.0F, 200.0F);
 }

@@ -14,7 +14,7 @@ public interface IWindowDecoration
 
 public class WindowShadow : View, IWindowDecoration
 {
-    public WindowShadow(Window window) : base(window.RootView, new Rect(0.0F, 0.0F, 10.0F, 10.0F))
+    public WindowShadow(Window window, IntPtr rootView) : base(rootView, new Rect(0.0F, 0.0F, 10.0F, 10.0F))
     {
         this._thickness = 40;
 
