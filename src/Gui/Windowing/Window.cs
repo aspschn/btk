@@ -76,17 +76,6 @@ public class Window : Surface
             Console.WriteLine("Size setter");
             var prevGeo = _body.Geometry;
             _body.Geometry = new Rect(prevGeo.X, prevGeo.Y, value.Width, value.Height);
-
-            // TODO: Set the root view size.
-
-            // TODO: Set surface size and wm_geometry of desktop surface.
-            this.SurfaceSize = this.CalculateSurfaceSize();
-            if (this.HasDecoration) {
-                this.UpdateDecoration();
-            }
-
-            // Update WM geometry.
-            // TODO.
         }
     }
 
@@ -156,11 +145,15 @@ public class Window : Surface
         return surfaceSize;
     }
 
+    /// <summary>
+    /// Used in WMGeometry setter.
+    /// </summary>
+    /// <returns></returns>
     private Rect CalculateWindowGeometry()
     {
         var surfaceSize = this.CalculateSurfaceSize();
 
-        if (!this.HasDecoration) {
+        if (!HasDecoration) {
             Rect geo = new Rect(0F, 0F, surfaceSize.Width, surfaceSize.Height);
             return geo;
         } else {
@@ -233,7 +226,26 @@ public class Window : Surface
         Console.WriteLine("Window resize event.");
         Console.WriteLine(evt.Size.Width);
         Console.WriteLine(evt.Size.Height);
-        this.Size = evt.Size;
+        // Set the body size.
+        if (HasDecoration)
+        {
+            var targetSize = evt.Size;
+            targetSize.Width -= (_border!.Thickness * 2);
+            targetSize.Height -= ((_border!.Thickness * 2) + (_titleBar!.Thickness));
+            Size = targetSize;
+        }
+        else
+        {
+            // TODO: When no decoration.
+        }
+        // TODO: Set surface size and wm_geometry of desktop surface.
+        SurfaceSize = CalculateSurfaceSize();
+        if (HasDecoration) {
+            UpdateDecoration();
+        }
+
+        // Update WM geometry.
+        base.WMGeometry = CalculateWindowGeometry();
     }
 
     private void AddResizeEventListener()

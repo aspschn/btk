@@ -5,7 +5,7 @@ using Blusher.Gui;
 
 public class TitleBar : View, IWindowDecoration
 {
-    public View _closeButton;
+    private View _closeButton;
 
     public TitleBar(Window window, View parent) : base(parent, new Rect(0F, 0F, 10F, 10F))
     {
