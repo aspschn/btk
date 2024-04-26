@@ -122,6 +122,14 @@ public class Window : Surface
     }
 
     /// <summary>
+    /// Close the window.
+    /// </summary>
+    public void Close()
+    {
+        Swingby.sb_desktop_surface_toplevel_close(_sbDesktopSurface);
+    }
+
+    /// <summary>
     /// Entire surface size. Include decorations such as shadow.
     /// </summary>
     private Size SurfaceSize
@@ -173,7 +181,13 @@ public class Window : Surface
     {
         var width = _body.Geometry.Width;
         var height = _body.Geometry.Height;
-        return new Rect(50.0f, 50.0f, width, height);
+        var x = 0.0f;
+        var y = 0.0f;
+        if (HasDecoration) {
+            x = _shadow!.Thickness;
+            y = _shadow!.Thickness + _titleBar!.Thickness;
+        }
+        return new Rect(x, y, width, height);
     }
 
     private void UpdateDecoration()

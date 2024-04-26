@@ -8,6 +8,9 @@ using Blusher.Swingby;
 
 public class View
 {
+    public event EventHandler<PointerEvent>? OnPointerPress = null;
+    public event EventHandler<PointerEvent>? OnPointerRelease = null;
+
     public View(View parent, Rect geometry)
     {
         // C functions.
@@ -104,7 +107,7 @@ public class View
 
     protected virtual void PointerPressEvent(PointerEvent evt)
     {
-        // Console.WriteLine("View PointerPressEvent");
+        OnPointerPress?.Invoke(this, evt);
     }
 
     protected virtual void PointerReleaseEvent(PointerEvent evt)
