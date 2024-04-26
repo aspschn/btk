@@ -45,7 +45,7 @@ public class Window : Surface
         this.AddResizeEventListener();
     }
 
-    public void Show()
+    public new void Show()
     {
         base.Show();
 
@@ -68,7 +68,7 @@ public class Window : Surface
     /// <summary>
     /// Size of the body area.
     /// </summary>
-    public Size Size
+    public new Size Size
     {
         get => this._body.Geometry.Size;
         set
@@ -142,7 +142,7 @@ public class Window : Surface
         var surfaceSize = Size;
         if (this._shadow != null) {
             surfaceSize.Width += (this._shadow.Thickness * 2);
-            surfaceSize.Height += (this._shadow.Thickness * 2) + (_titleBar.Thickness);
+            surfaceSize.Height += (this._shadow.Thickness * 2) + (_titleBar!.Thickness);
         }
 
         return surfaceSize;
