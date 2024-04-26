@@ -79,12 +79,11 @@ public class View
         {
             this._color = value;
 
-            var ftColor = sb_color_t.FromColor(value);
-            var ftColorPtr = ftColor.AllocCPtr();
+            var sbColor = sb_color_t.FromColor(value);
+            var sbColorPtr = sbColor.AllocCPtr();
 
-            Swingby.sb_view_set_color(this._ftView, ftColorPtr);
-
-            Marshal.FreeHGlobal(ftColorPtr);
+            Swingby.sb_view_set_color(this._ftView, sbColorPtr);
+            Marshal.FreeHGlobal(sbColorPtr);
         }
     }
 

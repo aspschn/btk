@@ -18,13 +18,15 @@ public class Window : Surface
         IntPtr sbSurface = Swingby.sb_desktop_surface_surface(this._sbDesktopSurface);
         IntPtr sbRootView = Swingby.sb_surface_root_view(sbSurface);
 
-        // Create a body view.
-        _body = new View(sbRootView, new Rect(0.0f, 0.0f, 200.0f, 200.0f));
-        _body.Color = new Color(255, 255, 255, 255);
-
         // Add decoration.
         // - Add shadow.
         this._shadow = new WindowShadow(this, sbRootView);
+
+        // Create a body view.
+        // THIS ORDER IS IMPORTANT ELSE IT CRASH. REASON WHY I DON'T KNOW.
+        _body = new View(sbRootView, new Rect(0.0f, 0.0f, 200.0f, 200.0f));
+        _body.Color = new Color(255, 255, 255, 255);
+
         // - Add resize.
         this._resize = new WindowResize(_shadow);
         // - Add border.
@@ -140,7 +142,7 @@ public class Window : Surface
         var surfaceSize = Size;
         if (this._shadow != null) {
             surfaceSize.Width += (this._shadow.Thickness * 2);
-            surfaceSize.Height += (this._shadow.Thickness * 2);
+            surfaceSize.Height += (this._shadow.Thickness * 2) + (_titleBar.Thickness);
         }
 
         return surfaceSize;

@@ -48,6 +48,7 @@ public class Surface
         {
             IntPtr sbSurface = Swingby.sb_desktop_surface_surface(_sbDesktopSurface);
             IntPtr sbSize = Swingby.sb_surface_size(sbSurface);
+
             float width = Swingby.sb_size_width(sbSize);
             float height = Swingby.sb_size_height(sbSize);
 
@@ -56,6 +57,7 @@ public class Surface
         set
         {
             IntPtr sbSurface = Swingby.sb_desktop_surface_surface(_sbDesktopSurface);
+
             var sbSize = sb_size_t.FromSize(value);
             var sbSizePtr = sbSize.AllocCPtr();
             Swingby.sb_surface_set_size(sbSurface, sbSizePtr);
