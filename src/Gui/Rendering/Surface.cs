@@ -1,9 +1,9 @@
-namespace Blusher.Gui.Rendering;
+namespace Btk.Gui.Rendering;
 
 using System.Runtime.InteropServices;
 
-using Blusher.Drawing;
-using Blusher.Swingby;
+using Btk.Drawing;
+using Btk.Swingby;
 
 public class Surface
 {

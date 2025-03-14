@@ -1,4 +1,4 @@
-namespace Blusher.Gui.Rendering;
+namespace Btk.Gui.Rendering;
 
 public enum SurfaceRole
 {

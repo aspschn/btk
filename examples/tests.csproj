@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Blusher">
-      <HintPath>../build/Release/Blusher.dll</HintPath>
+    <Reference Include="Btk">
+      <HintPath>../build/Release/Btk.dll</HintPath>
     </Reference>
   </ItemGroup>
 

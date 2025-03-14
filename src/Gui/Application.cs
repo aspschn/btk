@@ -1,6 +1,6 @@
-namespace Blusher.Gui;
+namespace Btk.Gui;
 
-using Blusher.Swingby;
+using Btk.Swingby;
 
 /// <summary>
 /// A global application object.

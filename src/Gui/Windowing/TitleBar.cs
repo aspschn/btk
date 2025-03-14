@@ -1,7 +1,7 @@
-namespace Blusher.Gui.Windowing;
+namespace Btk.Gui.Windowing;
 
-using Blusher.Drawing;
-using Blusher.Gui;
+using Btk.Drawing;
+using Btk.Gui;
 
 public class TitleBar : View, IWindowDecoration
 {

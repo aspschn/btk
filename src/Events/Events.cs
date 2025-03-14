@@ -1,7 +1,7 @@
-namespace Blusher.Events;
+namespace Btk.Events;
 
-using Blusher.Drawing;
-using Blusher.Swingby;
+using Btk.Drawing;
+using Btk.Swingby;
 
 public enum EventType
 {

@@ -1,6 +1,6 @@
-namespace Blusher.Gui.Windowing;
+namespace Btk.Gui.Windowing;
 
-using Blusher.Drawing;
+using Btk.Drawing;
 
 public class WindowResize : View, IWindowDecoration
 {

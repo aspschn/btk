@@ -3,9 +3,9 @@ namespace Example;
 
 using System;
 
-using Blusher.Drawing;
-using Blusher.Gui;
-using Blusher.Gui.Windowing;
+using Btk.Drawing;
+using Btk.Gui;
+using Btk.Gui.Windowing;
 
 public class Program
 {

@@ -1,10 +1,10 @@
-namespace Blusher.Gui;
+namespace Btk.Gui;
 
 using System.Runtime.InteropServices;
 
-using Blusher.Drawing;
-using Blusher.Events;
-using Blusher.Swingby;
+using Btk.Drawing;
+using Btk.Events;
+using Btk.Swingby;
 
 public class View
 {

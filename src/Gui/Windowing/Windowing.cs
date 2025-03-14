@@ -1,11 +1,11 @@
-namespace Blusher.Gui.Windowing;
+namespace Btk.Gui.Windowing;
 
 using System.Runtime.InteropServices;
 
-using Blusher.Drawing;
-using Blusher.Gui;
-using Blusher.Events;
-using Blusher.Swingby;
+using Btk.Drawing;
+using Btk.Gui;
+using Btk.Events;
+using Btk.Swingby;
 
 public interface IWindowDecoration
 {

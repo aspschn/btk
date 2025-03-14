@@ -1,9 +1,9 @@
-namespace Blusher.Swingby;
+namespace Btk.Swingby;
 
 using System;
 using System.Runtime.InteropServices;
 
-using Blusher.Drawing;
+using Btk.Drawing;
 
 internal struct sb_point_t
 {
