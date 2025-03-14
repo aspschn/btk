@@ -11,7 +11,7 @@ public class TitleBar : View, IWindowDecoration
     {
         _thickness = 30;
         _window = window;
-        this.Pressed = false;
+        Pressed = false;
         Color = new Color(128, 128, 128, 255);
 
         // Close button test.
