@@ -88,7 +88,7 @@ internal struct sb_color_t
 
 internal class Swingby
 {
-#if BLUSHER_LIBSWINGBY_DEV
+#if BTK_LIBSWINGBY_DEV
     private const string Libswingby = "/usr/local/lib/libswingby.so";
 #else
     private const string Libswingby = "libswingby.so";

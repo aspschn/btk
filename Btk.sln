@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blusher", "Blusher.csproj", "{DE1A42AE-3D6B-44E7-8D66-EC8B6E3A6211}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Btk", "Btk.csproj", "{DE1A42AE-3D6B-44E7-8D66-EC8B6E3A6211}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
