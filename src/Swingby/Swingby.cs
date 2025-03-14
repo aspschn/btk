@@ -86,6 +86,33 @@ internal struct sb_color_t
     }
 }
 
+internal struct sb_view_radius_t
+{
+    public float top_left;
+    public float top_right;
+    public float bottom_right;
+    public float bottom_left;
+
+    internal static sb_view_radius_t FromViewRadius(ViewRadius viewRadius)
+    {
+        sb_view_radius_t ret;
+        ret.top_left = viewRadius.TopLeft;
+        ret.top_right = viewRadius.TopRight;
+        ret.bottom_right = viewRadius.BottomRight;
+        ret.bottom_left = viewRadius.BottomLeft;
+
+        return ret;
+    }
+
+    internal IntPtr AllocCPtr()
+    {
+        IntPtr cPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(sb_view_radius_t)));
+        Marshal.StructureToPtr(this, cPtr, false);
+
+        return cPtr;
+    }
+}
+
 internal class Swingby
 {
 #if BTK_LIBSWINGBY_DEV
@@ -214,6 +241,9 @@ internal class Swingby
 
     [DllImport(Libswingby)]
     internal static extern void sb_view_set_geometry(IntPtr view, IntPtr geometry);
+
+    [DllImport(Libswingby)]
+    internal static extern void sb_view_set_radius(IntPtr view, IntPtr radius);
 
     [DllImport(Libswingby)]
     internal static extern void sb_view_add_event_listener(IntPtr view, int eventType, EventListener listener);

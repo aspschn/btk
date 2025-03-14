@@ -26,6 +26,7 @@ public class View
         this._parent = parent;
         this._geometry = geometry;
         this._color = new Color(255, 255, 255, 255);
+        _radius = new ViewRadius(0.0f, 0.0f, 0.0f, 0.0f);
 
         // Parenting.
         parent._children.Add(this);
@@ -87,6 +88,21 @@ public class View
 
             Swingby.sb_view_set_color(this._ftView, sbColorPtr);
             Marshal.FreeHGlobal(sbColorPtr);
+        }
+    }
+
+    public ViewRadius Radius
+    {
+        get => _radius;
+        set
+        {
+            _radius = value;
+
+            var sbViewRaduis = sb_view_radius_t.FromViewRadius(_radius);
+            var sbViewRadiusPtr = sbViewRaduis.AllocCPtr();
+
+            Swingby.sb_view_set_radius(_ftView, sbViewRadiusPtr);
+            Marshal.FreeHGlobal(sbViewRadiusPtr);
         }
     }
 
@@ -190,4 +206,5 @@ public class View
     private List<View> _children = [];
     private Rect _geometry;
     private Color _color;
+    private ViewRadius _radius;
 }

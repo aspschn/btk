@@ -17,6 +17,7 @@ public class TitleBar : View, IWindowDecoration
         // Close button test.
         _closeButton = new View(this, new Rect(5.0f, 5.0f, 20.0f, 20.0f));
         _closeButton.Color = new Color(255, 0, 0, 255);
+        _closeButton.Radius = new ViewRadius(25.0f, 25.0f, 25.0f, 25.0f);
         _closeButton.OnPointerPress += (v, evt) =>
         {
             _window.Close();
