@@ -4,6 +4,7 @@ using System;
 using System.Runtime.InteropServices;
 
 using Btk.Drawing;
+using Btk.Gui;
 
 internal struct sb_point_t
 {
@@ -166,6 +167,71 @@ internal class Swingby
     // internal const int SB_VIEW_FILL_TYPE_SINGLE_COLOR = 0;
     // internal const int SB_VIEW_FILL_TYPE_IMAGE = 1;
 
+    // enum sb_cursor_shape
+    internal const int SB_CURSOR_SHAPE_NONE = 0;
+    internal const int SB_CURSOR_SHAPE_DEFAULT = 1;
+    internal const int SB_CURSOR_SHAPE_CONTEXT_MENU = 2;
+    internal const int SB_CURSOR_SHAPE_HELP = 3;
+    internal const int SB_CURSOR_SHAPE_POINTER = 4;
+    internal const int SB_CURSOR_SHAPE_PROGRESS = 5;
+    internal const int SB_CURSOR_SHAPE_WAIT = 6;
+    internal const int SB_CURSOR_SHAPE_CELL = 7;
+    internal const int SB_CURSOR_SHAPE_CROSSHAIR = 8;
+    internal const int SB_CURSOR_SHAPE_TEXT = 9;
+    internal const int SB_CURSOR_SHAPE_VERTICAL_TEXT = 10;
+    internal const int SB_CURSOR_SHAPE_ALIAS = 11;
+    internal const int SB_CURSOR_SHAPE_COPY = 12;
+    internal const int SB_CURSOR_SHAPE_MOVE = 13;
+    internal const int SB_CURSOR_SHAPE_NO_DROP = 14;
+    internal const int SB_CURSOR_SHAPE_NOT_ALLOWED = 15;
+    internal const int SB_CURSOR_SHAPE_GRAB = 16;
+    internal const int SB_CURSOR_SHAPE_GRABBING = 17;
+    internal const int SB_CURSPR_SHAPE_E_RESIZE = 18;
+    internal const int SB_CURSOR_SHAPE_N_RESIZE = 19;
+    internal const int SB_CURSOR_SHAPE_NE_RESIZE = 20;
+    internal const int SB_CURSOR_SHAPE_NW_RESIZE = 21;
+    internal const int SB_CURSOR_SHAPE_S_RESIZE = 22;
+    internal const int SB_CURSOR_SHAPE_SE_RESIZE = 23;
+    internal const int SB_CURSOR_SHAPE_SW_RESIZE = 24;
+    internal const int SB_CURSOR_SHAPE_W_RESIZE = 25;
+    internal const int SB_CURSOR_SHAPE_EW_RESIZE = 26;
+    internal const int SB_CURSOR_SHAPE_NS_RESIZE = 27;
+    internal const int SB_CURSOR_SHAPE_NESW_RESIZE = 28;
+    internal const int SB_CURSOR_SHAPE_NWSE_RESIZE = 29;
+    internal const int SB_CURSOR_SHAPE_COL_RESIZE = 30;
+    internal const int SB_CURSOR_SHAPE_ROW_RESIZE = 31;
+    internal const int SB_CURSOR_SHAPE_ALL_SCROLL = 32;
+    internal const int SB_CURSOR_SHAPE_ZOOM_IN = 33;
+    internal const int SB_CURSOR_SHAPE_ZOOM_OUT = 34;
+
+    internal static int FromCursorShape(CursorShape shape)
+    {
+        return shape switch
+        {
+            CursorShape.Default => SB_CURSOR_SHAPE_DEFAULT,
+            CursorShape.ContextMenu => SB_CURSOR_SHAPE_CONTEXT_MENU,
+            CursorShape.Help => SB_CURSOR_SHAPE_HELP,
+            CursorShape.Pointer => SB_CURSOR_SHAPE_POINTER,
+            CursorShape.SEResize => SB_CURSOR_SHAPE_SE_RESIZE,
+            CursorShape.SWResize => SB_CURSOR_SHAPE_SW_RESIZE,
+            _ => SB_CURSOR_SHAPE_NONE
+        };
+    }
+
+    internal static CursorShape ToCursorShape(int sbCursorShape)
+    {
+        return sbCursorShape switch
+        {
+            SB_CURSOR_SHAPE_DEFAULT => CursorShape.Default,
+            SB_CURSOR_SHAPE_CONTEXT_MENU => CursorShape.ContextMenu,
+            SB_CURSOR_SHAPE_HELP => CursorShape.Help,
+            SB_CURSOR_SHAPE_POINTER => CursorShape.Pointer,
+            SB_CURSOR_SHAPE_SE_RESIZE => CursorShape.SEResize,
+            SB_CURSOR_SHAPE_SW_RESIZE => CursorShape.SWResize,
+            _ => CursorShape.None
+        };
+    }
+
     public delegate void EventListener(IntPtr sbEvent);
 
     //==================
@@ -247,6 +313,12 @@ internal class Swingby
 
     [DllImport(Libswingby)]
     internal static extern void sb_view_set_radius(IntPtr view, IntPtr radius);
+
+    [DllImport(Libswingby)]
+    internal static extern int sb_view_cursor_shape(IntPtr view);
+
+    [DllImport(Libswingby)]
+    internal static extern void sb_view_set_cursor_shape(IntPtr view, int shape);
 
     [DllImport(Libswingby)]
     internal static extern void sb_view_add_event_listener(IntPtr view, int eventType, EventListener listener);

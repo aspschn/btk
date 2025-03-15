@@ -14,11 +14,11 @@ public class View
     public View(View parent, Rect geometry)
     {
         // C functions.
-        var ftParent = parent._ftView;
+        var ftParent = parent._sbView;
         var ftGeometry = sb_rect_t.FromRect(geometry);
         var ftGeometryCPtr = ftGeometry.AllocCPtr();
 
-        this._ftView = Swingby.sb_view_new(ftParent, ftGeometryCPtr);
+        this._sbView = Swingby.sb_view_new(ftParent, ftGeometryCPtr);
 
         Marshal.FreeHGlobal(ftGeometryCPtr);
 
@@ -47,7 +47,7 @@ public class View
         var ftGeometry = sb_rect_t.FromRect(geometry);
         var ftGeometryCPtr = ftGeometry.AllocCPtr();
 
-        this._ftView = Swingby.sb_view_new(rootView, ftGeometryCPtr);
+        this._sbView = Swingby.sb_view_new(rootView, ftGeometryCPtr);
 
         Marshal.FreeHGlobal(ftGeometryCPtr);
 
@@ -70,7 +70,7 @@ public class View
             var ftGeometry = sb_rect_t.FromRect(value);
             var ftGeometryPtr = ftGeometry.AllocCPtr();
 
-            Swingby.sb_view_set_geometry(this._ftView, ftGeometryPtr);
+            Swingby.sb_view_set_geometry(this._sbView, ftGeometryPtr);
 
             Marshal.FreeHGlobal(ftGeometryPtr);
         }
@@ -86,7 +86,7 @@ public class View
             var sbColor = sb_color_t.FromColor(value);
             var sbColorPtr = sbColor.AllocCPtr();
 
-            Swingby.sb_view_set_color(this._ftView, sbColorPtr);
+            Swingby.sb_view_set_color(this._sbView, sbColorPtr);
             Marshal.FreeHGlobal(sbColorPtr);
         }
     }
@@ -101,9 +101,19 @@ public class View
             var sbViewRaduis = sb_view_radius_t.FromViewRadius(_radius);
             var sbViewRadiusPtr = sbViewRaduis.AllocCPtr();
 
-            Swingby.sb_view_set_radius(_ftView, sbViewRadiusPtr);
+            Swingby.sb_view_set_radius(_sbView, sbViewRadiusPtr);
             Marshal.FreeHGlobal(sbViewRadiusPtr);
         }
+    }
+
+    public CursorShape CursorShape
+    {
+        get
+        {
+            int sbCursorShape = Swingby.sb_view_cursor_shape(this._sbView);
+            return Swingby.ToCursorShape(sbCursorShape);
+        }
+        set => Swingby.sb_view_set_cursor_shape(_sbView, Swingby.FromCursorShape(value));
     }
 
     protected virtual void PointerEnterEvent(PointerEvent evt)
@@ -133,7 +143,7 @@ public class View
 
     private void AddEventListeners()
     {
-        IntPtr ftView = this._ftView;
+        IntPtr ftView = this._sbView;
 
         var enterEventListener = new Swingby.EventListener(this.CallPointerEnterEvent);
         Swingby.sb_view_add_event_listener(ftView, Swingby.SB_EVENT_TYPE_POINTER_ENTER, enterEventListener);
@@ -201,7 +211,7 @@ public class View
         this.PointerReleaseEvent(evt);
     }
 
-    private IntPtr _ftView;
+    private IntPtr _sbView;
     private View? _parent;
     private List<View> _children = [];
     private Rect _geometry;

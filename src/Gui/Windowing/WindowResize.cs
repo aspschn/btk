@@ -46,6 +46,7 @@ public class WindowResize : View, IWindowDecoration
         _thickness = 5;
         _window = window;
         _bottomRightEdge = new ResizeEdge(SurfaceResizeEdge.BottomRight, this, window);
+        _bottomRightEdge.CursorShape = CursorShape.SEResize;
 
         this.Color = new Color(0, 255, 0, 100);
     }
