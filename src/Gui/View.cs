@@ -8,8 +8,16 @@ using Btk.Swingby;
 
 public class View
 {
+    private IntPtr _sbView;
+    private View? _parent;
+    private List<View> _children = [];
+    private Rect _geometry;
+    private Color _color;
+    private ViewRadius _radius;
+
     public event EventHandler<PointerEvent>? OnPointerPress = null;
     public event EventHandler<PointerEvent>? OnPointerRelease = null;
+    public event EventHandler<PointerEvent>? OnPointerClick = null;
 
     public View(View parent, Rect geometry)
     {
@@ -138,7 +146,12 @@ public class View
 
     protected virtual void PointerReleaseEvent(PointerEvent evt)
     {
-        //
+        OnPointerRelease?.Invoke(this, evt);
+    }
+
+    protected virtual void PointerClickEvent(PointerEvent evt)
+    {
+        OnPointerClick?.Invoke(this, evt);
     }
 
     private void AddEventListeners()
@@ -159,6 +172,9 @@ public class View
 
         var releaseEventListener = new Swingby.EventListener(this.CallPointerReleaseEvent);
         Swingby.sb_view_add_event_listener(ftView, Swingby.SB_EVENT_TYPE_POINTER_RELEASE, releaseEventListener);
+
+        var clickEventListener = new Swingby.EventListener(CallPointerClickEvent);
+        Swingby.sb_view_add_event_listener(ftView, Swingby.SB_EVENT_TYPE_POINTER_CLICK, clickEventListener);
     }
 
     private void CallPointerEnterEvent(IntPtr ftEvent)
@@ -166,7 +182,7 @@ public class View
         // TODO: fill info.
 
         var evt = new PointerEvent(EventType.PointerEnter);
-        evt.SetFoundationEvent(ftEvent);
+        evt.SetSwingbyEvent(ftEvent);
 
         this.PointerEnterEvent(evt);
     }
@@ -176,7 +192,7 @@ public class View
         // TODO: fill info
 
         var evt = new PointerEvent(EventType.PointerLeave);
-        evt.SetFoundationEvent(ftEvent);
+        evt.SetSwingbyEvent(ftEvent);
 
         this.PointerLeaveEvent(evt);
     }
@@ -186,7 +202,7 @@ public class View
         // TODO: fill info
 
         var evt = new PointerEvent(EventType.PointerMove);
-        evt.SetFoundationEvent(ftEvent);
+        evt.SetSwingbyEvent(ftEvent);
 
         this.PointerMoveEvent(evt);
     }
@@ -196,7 +212,7 @@ public class View
         // TODO: fill info
 
         var evt = new PointerEvent(EventType.PointerPress);
-        evt.SetFoundationEvent(ftEvent);
+        evt.SetSwingbyEvent(ftEvent);
 
         this.PointerPressEvent(evt);
     }
@@ -206,15 +222,16 @@ public class View
         // TODO: fill info
 
         var evt = new PointerEvent(EventType.PointerRelease);
-        evt.SetFoundationEvent(ftEvent);
+        evt.SetSwingbyEvent(ftEvent);
 
         this.PointerReleaseEvent(evt);
     }
 
-    private IntPtr _sbView;
-    private View? _parent;
-    private List<View> _children = [];
-    private Rect _geometry;
-    private Color _color;
-    private ViewRadius _radius;
+    private void CallPointerClickEvent(IntPtr sbEvent)
+    {
+        var evt = new PointerEvent(EventType.PointerClick);
+        evt.SetSwingbyEvent(sbEvent);
+
+        this.PointerClickEvent(evt);
+    }
 }

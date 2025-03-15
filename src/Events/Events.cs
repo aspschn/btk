@@ -11,6 +11,8 @@ public enum EventType
     PointerPress,
     PointerRelease,
     PointerClick,
+    PointerDoubleClick,
+    PointerScroll,
     Move,
     Resize,
 }
@@ -46,9 +48,9 @@ public class Event
         }
     }
 
-    internal void SetFoundationEvent(IntPtr ftEvent)
+    internal void SetSwingbyEvent(IntPtr sbEvent)
     {
-        this._sbEvent = ftEvent;
+        this._sbEvent = sbEvent;
     }
 
     private IntPtr _sbEvent;
