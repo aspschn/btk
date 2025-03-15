@@ -11,6 +11,7 @@ public class Surface
     {
         Role = role;
         _parent = parent;
+        _inputGeometry = null;
 
         int sbRole = 0;
         sbRole = role == SurfaceRole.Toplevel ? Swingby.SB_DESKTOP_SURFACE_ROLE_TOPLEVEL : Swingby.SB_DESKTOP_SURFACE_ROLE_POPUP;
@@ -81,6 +82,26 @@ public class Surface
         }
     }
 
+    public Rect? InputGeometry
+    {
+        get => _inputGeometry;
+        set
+        {
+            // Input geometry cannot set to null.
+            if (value == null)
+            {
+                return;
+            }
+            var sbSurface = Swingby.sb_desktop_surface_surface(_sbDesktopSurface);
+            _inputGeometry = value;
+
+            var sbRect = sb_rect_t.FromRect(value.Value);
+            var sbRectPtr = sbRect.AllocCPtr();
+            Swingby.sb_surface_set_input_geometry(sbSurface, sbRectPtr);
+            Marshal.FreeHGlobal(sbRectPtr);
+        }
+    }
+
     public void Show()
     {
         Swingby.sb_desktop_surface_show(_sbDesktopSurface);
@@ -93,4 +114,5 @@ public class Surface
 
     protected IntPtr _sbDesktopSurface;
     private Surface? _parent;
+    private Rect? _inputGeometry;
 }

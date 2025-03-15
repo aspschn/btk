@@ -51,6 +51,7 @@ public class Window : Surface
 
         // Set WM geometry. This SHOULD be done after Show.
         base.WMGeometry = CalculateWindowGeometry();
+        base.InputGeometry = CalculateInputGeometry();
     }
 
     /// <summary>
@@ -167,6 +168,30 @@ public class Window : Surface
     }
 
     /// <summary>
+    /// Used in InputGeometry setter.
+    /// </summary>
+    private Rect CalculateInputGeometry()
+    {
+        var surfaceSize = CalculateSurfaceSize();
+
+        if (!HasDecoration)
+        {
+            Rect geo = new Rect(0.0f, 0.0f, surfaceSize.Width, surfaceSize.Height);
+            return geo;
+        }
+        else
+        {
+            Rect geo = new Rect(
+                _shadow!.Thickness - _resize!.Thickness,
+                _shadow!.Thickness - _resize!.Thickness,
+                _resize!.Geometry.Width,
+                _resize!.Geometry.Height);
+
+            return geo;
+        }
+    }
+
+    /// <summary>
     /// Calculate the absolute geometry of the body view.
     /// </summary>
     /// <returns></returns>
@@ -246,6 +271,7 @@ public class Window : Surface
 
         // Update WM geometry.
         base.WMGeometry = CalculateWindowGeometry();
+        base.InputGeometry = CalculateInputGeometry();
     }
 
     private void AddResizeEventListener()

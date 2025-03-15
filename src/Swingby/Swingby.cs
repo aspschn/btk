@@ -221,6 +221,9 @@ internal class Swingby
     internal static extern void sb_surface_set_size(IntPtr surface, IntPtr size);
 
     [DllImport(Libswingby)]
+    internal static extern void sb_surface_set_input_geometry(IntPtr surface, IntPtr geometry);
+
+    [DllImport(Libswingby)]
     internal static extern void sb_surface_add_event_listener(IntPtr surface, int eventType,
         EventListener listener);
 
