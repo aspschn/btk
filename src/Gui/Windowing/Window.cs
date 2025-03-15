@@ -28,7 +28,7 @@ public class Window : Surface
         _body.Color = new Color(255, 255, 255, 255);
 
         // - Add resize.
-        this._resize = new WindowResize(_shadow);
+        this._resize = new WindowResize(this, _shadow);
         // - Add border.
         this._border = new WindowBorder(this, _resize);
         // - Add title bar.
@@ -92,23 +92,9 @@ public class Window : Surface
         Swingby.sb_desktop_surface_toplevel_move(base._sbDesktopSurface);
     }
 
-    public void StartResize(ResizeEdge resizeEdge)
+    public void StartResize(SurfaceResizeEdge resizeEdge)
     {
-        int sbEdge = resizeEdge switch
-        {
-            ResizeEdge.None => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_NONE,
-            ResizeEdge.Top => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP,
-            ResizeEdge.Bottom => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM,
-            ResizeEdge.Left => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_LEFT,
-            ResizeEdge.TopLeft => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP_LEFT,
-            ResizeEdge.BottomLeft => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM_LEFT,
-            ResizeEdge.Right => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_RIGHT,
-            ResizeEdge.TopRight => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP_RIGHT,
-            ResizeEdge.BottomRight => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM_RIGHT,
-            _ => 0
-        };
-
-        Swingby.sb_desktop_surface_toplevel_resize(base._sbDesktopSurface, sbEdge);
+        base.Resize(resizeEdge);
     }
 
     /// <summary>
@@ -223,6 +209,7 @@ public class Window : Surface
                 shadowSize.Width - (_shadow.Thickness * 2) + (_resize.Thickness * 2),
                 shadowSize.Height - (_shadow.Thickness * 2) + (_resize.Thickness * 2)
             );
+            _resize.UpdateResizeEdges();
         }
 
         if (_border != null) {

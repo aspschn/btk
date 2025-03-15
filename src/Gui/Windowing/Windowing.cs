@@ -35,16 +35,3 @@ public enum WindowState
     Maximized,
     Fullscreen,
 }
-
-public enum ResizeEdge
-{
-    None,
-    Top,
-    Bottom,
-    Left,
-    TopLeft,
-    BottomLeft,
-    Right,
-    TopRight,
-    BottomRight,
-}

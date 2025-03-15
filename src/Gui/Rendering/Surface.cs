@@ -5,6 +5,19 @@ using System.Runtime.InteropServices;
 using Btk.Drawing;
 using Btk.Swingby;
 
+public enum SurfaceResizeEdge
+{
+    None,
+    Top,
+    Bottom,
+    Left,
+    TopLeft,
+    BottomLeft,
+    Right,
+    TopRight,
+    BottomRight,
+}
+
 public class Surface
 {
     public Surface(SurfaceRole role, Surface? parent = null)
@@ -110,6 +123,12 @@ public class Surface
     public void Hide()
     {
         Swingby.sb_desktop_surface_hide(_sbDesktopSurface);
+    }
+
+    public void Resize(SurfaceResizeEdge edge)
+    {
+        // TODO: All edges.
+        Swingby.sb_desktop_surface_toplevel_resize(_sbDesktopSurface, Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM_RIGHT);
     }
 
     protected IntPtr _sbDesktopSurface;
