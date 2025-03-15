@@ -199,6 +199,7 @@ public class Window : Surface
         var surfaceSize = this.CalculateSurfaceSize();
         if (this._shadow != null) {
             this._shadow.Geometry = new Rect(0F, 0F, surfaceSize.Width, surfaceSize.Height);
+            _shadow.UpdateShadow();
         }
 
         if (this._shadow != null && this._resize != null) {

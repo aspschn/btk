@@ -10,6 +10,14 @@ internal struct sb_point_t
 {
     public float x;
     public float y;
+
+    internal IntPtr AllocCPtr()
+    {
+        IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(sb_point_t)));
+        Marshal.StructureToPtr(this, ptr, false);
+
+        return ptr;
+    }
 }
 
 internal struct sb_size_t
@@ -232,6 +240,10 @@ internal class Swingby
         };
     }
 
+    // enum sb_filter_type
+    internal static int SB_FILTER_TYPE_BLUR = 0;
+    internal static int SB_FILTER_TYPE_DROP_SHADOW = 1;
+
     public delegate void EventListener(IntPtr sbEvent);
 
     //==================
@@ -321,6 +333,9 @@ internal class Swingby
     internal static extern void sb_view_set_cursor_shape(IntPtr view, int shape);
 
     [DllImport(Libswingby)]
+    internal static extern void sb_view_add_filter(IntPtr view, IntPtr filter);
+
+    [DllImport(Libswingby)]
     internal static extern void sb_view_add_event_listener(IntPtr view, int eventType, EventListener listener);
 
     //==================
@@ -350,4 +365,22 @@ internal class Swingby
 
     [DllImport(Libswingby)]
     internal static extern float sb_size_height(IntPtr sbSize);
+
+    //==================
+    // Filter
+    //==================
+    [DllImport(Libswingby)]
+    internal static extern IntPtr sb_filter_new(int filterType);
+
+    [DllImport(Libswingby)]
+    internal static extern void sb_filter_blur_set_radius(IntPtr sbFilter, float radius);
+
+    [DllImport(Libswingby)]
+    internal static extern void sb_filter_drop_shadow_set_offset(IntPtr sbFilter, IntPtr offset);
+
+    [DllImport(Libswingby)]
+    internal static extern void sb_filter_drop_shadow_set_radius(IntPtr sbFilter, float radius);
+
+    [DllImport(Libswingby)]
+    internal static extern void sb_filter_drop_shadow_set_color(IntPtr sbFilter, IntPtr color);
 }

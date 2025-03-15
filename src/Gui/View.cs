@@ -1,8 +1,11 @@
 namespace Btk.Gui;
 
 using System.Runtime.InteropServices;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 using Btk.Drawing;
+using Btk.Drawing.Effects;
 using Btk.Events;
 using Btk.Swingby;
 
@@ -38,6 +41,9 @@ public class View
 
         // Parenting.
         parent._children.Add(this);
+
+        // Add `Filters` property added action.
+        Filters.CollectionChanged += OnFilterAdded;
 
         // Add event listeners.
         this.AddEventListeners();
@@ -123,6 +129,8 @@ public class View
         }
         set => Swingby.sb_view_set_cursor_shape(_sbView, Swingby.FromCursorShape(value));
     }
+
+    public ObservableCollection<IFilter> Filters { get; set; } = [];
 
     protected virtual void PointerEnterEvent(PointerEvent evt)
     {
@@ -233,5 +241,20 @@ public class View
         evt.SetSwingbyEvent(sbEvent);
 
         this.PointerClickEvent(evt);
+    }
+
+    private void OnFilterAdded(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            if (e.NewItems == null)
+            {
+                return;
+            }
+
+            var lastItem = (IFilter)e.NewItems[^1]!;
+            var sbFilter = lastItem.GetCPtr();
+            Swingby.sb_view_add_filter(_sbView, sbFilter);
+        }
     }
 }
