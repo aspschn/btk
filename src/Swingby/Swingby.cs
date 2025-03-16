@@ -357,6 +357,12 @@ internal class Swingby
     [DllImport(Libswingby)]
     internal static extern IntPtr sb_event_resize_size(IntPtr sbEvent);
 
+    [DllImport(Libswingby)]
+    internal static extern IntPtr sb_event_move_old_position(IntPtr sbEvent);
+
+    [DllImport(Libswingby)]
+    internal static extern IntPtr sb_event_move_position(IntPtr sbEvent);
+
     //==================
     // Structs
     //==================
@@ -365,6 +371,12 @@ internal class Swingby
 
     [DllImport(Libswingby)]
     internal static extern float sb_size_height(IntPtr sbSize);
+
+    [DllImport(Libswingby)]
+    internal static extern float sb_point_x(IntPtr sbPoint);
+
+    [DllImport(Libswingby)]
+    internal static extern float sb_point_y(IntPtr sbPoint);
 
     //==================
     // Filter

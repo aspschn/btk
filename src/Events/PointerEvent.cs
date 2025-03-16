@@ -1,5 +1,6 @@
+namespace Btk.Events;
+
 using Btk.Drawing;
-using Btk.Events;
 
 public class PointerEvent : Event
 {

@@ -2,6 +2,7 @@ namespace Btk.Gui.Windowing;
 
 using Btk.Drawing;
 using Btk.Gui;
+using Btk.Events;
 
 public class TitleBar : View, IWindowDecoration
 {

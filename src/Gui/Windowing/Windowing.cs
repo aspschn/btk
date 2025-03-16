@@ -24,8 +24,8 @@ public class WindowShadow : View, IWindowDecoration
         _dummy = new View(this, new Rect(0.0f, 0.0f, 10.0f, 10.0f));
         _dummy.Color = new Color(0, 0, 0, 255);
         var filter = new DropShadowFilter();
-        filter.Radius = 30.0f;
-        // _dummy.Filters.Add(filter);
+        filter.Radius = 15.0f;
+        _dummy.Filters.Add(filter);
 
         this.Color = new Color(0, 0, 0, 0);
     }

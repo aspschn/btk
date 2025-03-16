@@ -2,6 +2,7 @@ namespace Btk.Gui.Windowing;
 
 using Btk.Drawing;
 using Btk.Gui.Rendering;
+using Btk.Events;
 
 internal class ResizeEdge : View
 {

@@ -162,27 +162,43 @@ public class View
         OnPointerClick?.Invoke(this, evt);
     }
 
+    protected virtual void MoveEvent(MoveEvent evt)
+    {
+        // TODO.
+    }
+
+    protected virtual void ResizeEvent(ResizeEvent evt)
+    {
+        // TODO.
+    }
+
     private void AddEventListeners()
     {
-        IntPtr ftView = this._sbView;
+        IntPtr sbView = this._sbView;
 
         var enterEventListener = new Swingby.EventListener(this.CallPointerEnterEvent);
-        Swingby.sb_view_add_event_listener(ftView, Swingby.SB_EVENT_TYPE_POINTER_ENTER, enterEventListener);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_ENTER, enterEventListener);
 
         var leaveEventListener = new Swingby.EventListener(this.CallPointerLeaveEvent);
-        Swingby.sb_view_add_event_listener(ftView, Swingby.SB_EVENT_TYPE_POINTER_LEAVE, leaveEventListener);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_LEAVE, leaveEventListener);
 
-        var moveEventListener = new Swingby.EventListener(this.CallPointerMoveEvent);
-        Swingby.sb_view_add_event_listener(ftView, Swingby.SB_EVENT_TYPE_POINTER_MOVE, moveEventListener);
+        var pointerMoveEventListener = new Swingby.EventListener(this.CallPointerMoveEvent);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_MOVE, pointerMoveEventListener);
 
         var pressEventListener = new Swingby.EventListener(this.CallPointerPressEvent);
-        Swingby.sb_view_add_event_listener(ftView, Swingby.SB_EVENT_TYPE_POINTER_PRESS, pressEventListener);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_PRESS, pressEventListener);
 
         var releaseEventListener = new Swingby.EventListener(this.CallPointerReleaseEvent);
-        Swingby.sb_view_add_event_listener(ftView, Swingby.SB_EVENT_TYPE_POINTER_RELEASE, releaseEventListener);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_RELEASE, releaseEventListener);
 
         var clickEventListener = new Swingby.EventListener(CallPointerClickEvent);
-        Swingby.sb_view_add_event_listener(ftView, Swingby.SB_EVENT_TYPE_POINTER_CLICK, clickEventListener);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_CLICK, clickEventListener);
+
+        var moveEventListener = new Swingby.EventListener(CallMoveEvent);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_MOVE, moveEventListener);
+
+        var resizeEventListener = new Swingby.EventListener(CallResizeEvent);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_RESIZE, resizeEventListener);
     }
 
     private void CallPointerEnterEvent(IntPtr ftEvent)
@@ -241,6 +257,38 @@ public class View
         evt.SetSwingbyEvent(sbEvent);
 
         this.PointerClickEvent(evt);
+    }
+
+    private void CallMoveEvent(IntPtr sbEvent)
+    {
+        var sbOldPos = Swingby.sb_event_move_old_position(sbEvent);
+        var sbPos = Swingby.sb_event_move_position(sbEvent);
+
+        float oldX = Swingby.sb_point_x(sbOldPos);
+        float oldY = Swingby.sb_point_y(sbOldPos);
+        float x = Swingby.sb_point_x(sbPos);
+        float y = Swingby.sb_point_y(sbPos);
+
+        Point oldPos = new Point(oldX, oldY);
+        Point pos = new Point(x, y);
+
+        MoveEvent(new MoveEvent(oldPos, pos));
+    }
+
+    private void CallResizeEvent(IntPtr sbEvent)
+    {
+        var sbOldSize = Swingby.sb_event_resize_old_size(sbEvent);
+        var sbSize = Swingby.sb_event_resize_size(sbEvent);
+
+        float oldWidth = Swingby.sb_size_width(sbOldSize);
+        float oldHeight = Swingby.sb_size_height(sbOldSize);
+        float width = Swingby.sb_size_width(sbSize);
+        float height = Swingby.sb_size_height(sbSize);
+
+        Size oldSize = new Size(oldWidth, oldHeight);
+        Size size = new Size(width, height);
+
+        ResizeEvent(new ResizeEvent(oldSize, size));
     }
 
     private void OnFilterAdded(object? sender, NotifyCollectionChangedEventArgs e)
