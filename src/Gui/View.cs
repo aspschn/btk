@@ -7,6 +7,7 @@ using System.Collections.Specialized;
 using Btk.Drawing;
 using Btk.Drawing.Effects;
 using Btk.Events;
+using Btk.Gui.Layouts;
 using Btk.Swingby;
 
 public class View
@@ -17,10 +18,17 @@ public class View
     private Rect _geometry;
     private Color _color;
     private ViewRadius _radius;
+    private AnchorLine _topAnchor;
+    private AnchorLine _leftAnchor;
+    private AnchorLine _bottomAnchor;
+    private AnchorLine _rightAnchor;
+    private AnchorLayout _anchors;
 
     public event EventHandler<PointerEvent>? OnPointerPress = null;
     public event EventHandler<PointerEvent>? OnPointerRelease = null;
     public event EventHandler<PointerEvent>? OnPointerClick = null;
+    public event EventHandler<MoveEvent>? OnMove = null;
+    public event EventHandler<ResizeEvent>? OnResize = null;
 
     public View(View parent, Rect geometry)
     {
@@ -44,6 +52,18 @@ public class View
 
         // Add `Filters` property added action.
         Filters.CollectionChanged += OnFilterAdded;
+
+        // Anchors.
+        _anchors = new AnchorLayout(this);
+
+        _topAnchor = new AnchorLine(this, Anchor.Top);
+        _leftAnchor = new AnchorLine(this, Anchor.Left);
+        _bottomAnchor = new AnchorLine(this, Anchor.Bottom);
+        _rightAnchor = new AnchorLine(this, Anchor.Right);
+
+        OnMove += CalculateTopAnchor;
+        OnMove += CalculateBottomAnchor;
+        OnResize += CalculateBottomAnchor;
 
         // Add event listeners.
         this.AddEventListeners();
@@ -69,6 +89,18 @@ public class View
         this._parent = null;
         this._geometry = geometry;
         this._color = new Color(255, 255, 255, 255);
+
+        // Anchors.
+        _anchors = new AnchorLayout(this);
+
+        _topAnchor = new AnchorLine(this, Anchor.Top);
+        _leftAnchor = new AnchorLine(this, Anchor.Left);
+        _bottomAnchor = new AnchorLine(this, Anchor.Bottom);
+        _rightAnchor = new AnchorLine(this, Anchor.Right);
+
+        OnMove += CalculateTopAnchor;
+        OnMove += CalculateBottomAnchor;
+        OnResize += CalculateBottomAnchor;
 
         // Add event listeners.
         this.AddEventListeners();
@@ -130,6 +162,18 @@ public class View
         set => Swingby.sb_view_set_cursor_shape(_sbView, Swingby.FromCursorShape(value));
     }
 
+    public AnchorLine TopAnchor => _topAnchor;
+
+    public AnchorLine BottomAnchor => _bottomAnchor;
+
+    public AnchorLayout Anchors
+    {
+        get
+        {
+            return _anchors;
+        }
+    }
+
     public ObservableCollection<IFilter> Filters { get; set; } = [];
 
     protected virtual void PointerEnterEvent(PointerEvent evt)
@@ -164,12 +208,12 @@ public class View
 
     protected virtual void MoveEvent(MoveEvent evt)
     {
-        // TODO.
+        OnMove?.Invoke(this, evt);
     }
 
     protected virtual void ResizeEvent(ResizeEvent evt)
     {
-        // TODO.
+        OnResize?.Invoke(this, evt);
     }
 
     private void AddEventListeners()
@@ -303,6 +347,28 @@ public class View
             var lastItem = (IFilter)e.NewItems[^1]!;
             var sbFilter = lastItem.GetCPtr();
             Swingby.sb_view_add_filter(_sbView, sbFilter);
+        }
+    }
+
+    //=============================
+    // Anchor Layout Calculations
+    //=============================
+    private void CalculateTopAnchor(object? sender, Event evt)
+    {
+        foreach (View subscribed in TopAnchor.SubscribedViews)
+        {
+            subscribed.Geometry = new Rect(subscribed.Geometry.X, Geometry.Y,
+                subscribed.Geometry.Width, subscribed.Geometry.Height);
+        }
+    }
+
+    private void CalculateBottomAnchor(object? sender, Event evt)
+    {
+        foreach (View subscribed in BottomAnchor.SubscribedViews)
+        {
+            float y = Geometry.Height - subscribed.Geometry.Height;
+            subscribed.Geometry = new Rect(subscribed.Geometry.X, y,
+                subscribed.Geometry.Width, subscribed.Geometry.Height);
         }
     }
 }
