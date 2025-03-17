@@ -82,7 +82,6 @@ public class AnchorLayout
             }
             else
             {
-                Console.WriteLine("Bottom set null.");
                 if (_bottomTarget == null)
                 {
                     return;

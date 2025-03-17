@@ -19,6 +19,10 @@ public class Program
         view.Color = new Color(255, 0, 0, 255);
         view.Anchors.Bottom = window.Body.BottomAnchor;
 
+        View upperView = new View(window.Body, new Rect(0.0f, 0.0f, 10.0f, 10.0f));
+        upperView.Color = new Color(0, 0, 255, 255);
+        upperView.Anchors.Bottom = view.TopAnchor;
+
         window.Show();
 
         return app.Exec();

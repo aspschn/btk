@@ -357,7 +357,8 @@ public class View
     {
         foreach (View subscribed in TopAnchor.SubscribedViews)
         {
-            subscribed.Geometry = new Rect(subscribed.Geometry.X, Geometry.Y,
+            subscribed.Geometry = new Rect(subscribed.Geometry.X,
+                Geometry.Y - subscribed.Geometry.Height,
                 subscribed.Geometry.Width, subscribed.Geometry.Height);
         }
     }
