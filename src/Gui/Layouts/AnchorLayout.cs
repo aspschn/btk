@@ -1,5 +1,6 @@
 namespace Btk.Gui.Layouts;
 
+using Btk.Drawing;
 using Btk.Events;
 
 public enum Anchor
@@ -20,28 +21,47 @@ public class AnchorLine
         Anchor = anchor;
     }
 
-    internal void Subscribe(View view)
+    internal void OnAnchorMove(View view, MoveEvent evt)
     {
-        SubscribedViews.Add(view);
+        foreach (AnchorLayout layout in Subscribed.Keys)
+        {
+            switch (Subscribed[layout])
+            {
+                case Anchor.Top:
+                    layout.OnTopAnchorMove(Anchor);
+                    break;
+                case Anchor.Bottom:
+                    layout.OnBottomAnchorMove(Anchor);
+                    break;
+            }
+        }
     }
 
-    internal void Unsubscribe(View view)
+    internal void OnAnchorResize(View view, ResizeEvent evt)
     {
-        SubscribedViews.Remove(view);
+        foreach (AnchorLayout layout in Subscribed.Keys)
+        {
+            switch (Subscribed[layout])
+            {
+                case Anchor.Top:
+                    layout.OnTopAnchorResize(Anchor);
+                    break;
+                case Anchor.Bottom:
+                    layout.OnBottomAnchorResize(Anchor);
+                    break;
+            }
+        }
     }
 
     public View View { get; private set; }
 
     public Anchor Anchor { get; private set; }
 
-    internal List<View> SubscribedViews { get; } = [];
+    internal Dictionary<AnchorLayout, Anchor> Subscribed { get; } = [];
 }
 
 public class AnchorLayout
 {
-    private AnchorLine? _topTarget = null;
-    private AnchorLine? _bottomTarget = null;
-
     public AnchorLayout(View view)
     {
         View = view;
@@ -55,17 +75,12 @@ public class AnchorLayout
         {
             if (value != null)
             {
-                _topTarget = value;
-                value.Subscribe(View);
+                TopAnchorView = value.View;
+                value.Subscribed.Add(this, Anchor.Top);
             }
             else
             {
-                if (_topTarget == null)
-                {
-                    return;
-                }
-                _topTarget.Unsubscribe(View);
-                _topTarget = null;
+                TopAnchorView = null;
             }
         }
     }
@@ -76,19 +91,115 @@ public class AnchorLayout
         {
             if (value != null)
             {
-                Console.WriteLine("Bottom set. value: " + value.ToString());
-                _bottomTarget = value;
-                value.Subscribe(View);
+                BottomAnchorView = value.View;
+                Console.WriteLine("Anchor.Bottom added. " + this.GetHashCode());
+                Console.WriteLine(" |- Target: " + value.GetHashCode());
+                value.Subscribed.Add(this, Anchor.Bottom);
             }
             else
             {
-                if (_bottomTarget == null)
-                {
-                    return;
-                }
-                _bottomTarget.Unsubscribe(View);
-                _bottomTarget = null;
+                BottomAnchorView = null;
             }
+        }
+    }
+
+    internal View? TopAnchorView { get; set; } = null;
+    internal View? BottomAnchorView { get; set; } = null;
+    internal View? LeftAnchorView { get; set; } = null;
+    internal View? RightAnchorView { get; set; } = null;
+
+    //=====================
+    // Anchor View Moved
+    //=====================
+
+    /// <summary>
+    /// Top anchor view moved.
+    /// </summary>
+    internal void OnTopAnchorMove(Anchor destAnchor)
+    {
+        if (TopAnchorView == null)
+        {
+            return;
+        }
+        Rect anchorGeo = TopAnchorView.Geometry;
+        if (destAnchor == Anchor.Top)
+        {
+            View.Geometry = new Rect(View.Geometry.X,
+                anchorGeo.Y,
+                View.Geometry.Width,
+                View.Geometry.Height);
+        } else if (destAnchor == Anchor.Bottom)
+        {
+            View.Geometry = new Rect(View.Geometry.X,
+                anchorGeo.Y + anchorGeo.Height,
+                View.Geometry.Width,
+                View.Geometry.Height);
+        }
+    }
+
+    /// <summary>
+    /// Bottom anchor view moved.
+    /// </summary>
+    internal void OnBottomAnchorMove(Anchor destAnchor)
+    {
+        if (BottomAnchorView == null)
+        {
+            return;
+        }
+        Rect anchorGeo = BottomAnchorView.Geometry;
+        if (destAnchor == Anchor.Top)
+        {
+            View.Geometry = new Rect(View.Geometry.X,
+                anchorGeo.Y - View.Geometry.Height,
+                View.Geometry.Width,
+                View.Geometry.Height);
+        } else if (destAnchor == Anchor.Bottom)
+        {
+            View.Geometry = new Rect(View.Geometry.X,
+                anchorGeo.Y + anchorGeo.Height - View.Geometry.Height,
+                View.Geometry.Width,
+                View.Geometry.Height);
+        }
+    }
+
+    //=======================
+    // Anchor View Resized
+    //=======================
+    internal void OnTopAnchorResize(Anchor destAnchor)
+    {
+        if (TopAnchorView == null)
+        {
+            return;
+        }
+        Rect anchorGeo = TopAnchorView.Geometry;
+        if (destAnchor == Anchor.Bottom)
+        {
+            View.Geometry = new Rect(View.Geometry.X,
+                anchorGeo.Height,
+                View.Geometry.Width,
+                View.Geometry.Height);
+        } else if (destAnchor == Anchor.Top)
+        {
+            // TODO.
+        }
+    }
+
+    internal void OnBottomAnchorResize(Anchor destAnchor)
+    {
+        if (BottomAnchorView == null)
+        {
+            return;
+        }
+        Rect anchorGeo = BottomAnchorView.Geometry;
+        if (destAnchor == Anchor.Bottom)
+        {
+            View.Geometry = new Rect(View.Geometry.X,
+                anchorGeo.Height - View.Geometry.Height,
+                View.Geometry.Width,
+                View.Geometry.Height);
+        } else if (destAnchor == Anchor.Top)
+        {
+            //
         }
     }
 }

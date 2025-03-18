@@ -61,10 +61,6 @@ public class View
         _bottomAnchor = new AnchorLine(this, Anchor.Bottom);
         _rightAnchor = new AnchorLine(this, Anchor.Right);
 
-        OnMove += CalculateTopAnchor;
-        OnMove += CalculateBottomAnchor;
-        OnResize += CalculateBottomAnchor;
-
         // Add event listeners.
         this.AddEventListeners();
     }
@@ -97,10 +93,6 @@ public class View
         _leftAnchor = new AnchorLine(this, Anchor.Left);
         _bottomAnchor = new AnchorLine(this, Anchor.Bottom);
         _rightAnchor = new AnchorLine(this, Anchor.Right);
-
-        OnMove += CalculateTopAnchor;
-        OnMove += CalculateBottomAnchor;
-        OnResize += CalculateBottomAnchor;
 
         // Add event listeners.
         this.AddEventListeners();
@@ -208,11 +200,15 @@ public class View
 
     protected virtual void MoveEvent(MoveEvent evt)
     {
+        _topAnchor.OnAnchorMove(this, evt);
+        _bottomAnchor.OnAnchorMove(this, evt);
         OnMove?.Invoke(this, evt);
     }
 
     protected virtual void ResizeEvent(ResizeEvent evt)
     {
+        _topAnchor.OnAnchorResize(this, evt);
+        _bottomAnchor.OnAnchorResize(this, evt);
         OnResize?.Invoke(this, evt);
     }
 
@@ -353,23 +349,4 @@ public class View
     //=============================
     // Anchor Layout Calculations
     //=============================
-    private void CalculateTopAnchor(object? sender, Event evt)
-    {
-        foreach (View subscribed in TopAnchor.SubscribedViews)
-        {
-            subscribed.Geometry = new Rect(subscribed.Geometry.X,
-                Geometry.Y - subscribed.Geometry.Height,
-                subscribed.Geometry.Width, subscribed.Geometry.Height);
-        }
-    }
-
-    private void CalculateBottomAnchor(object? sender, Event evt)
-    {
-        foreach (View subscribed in BottomAnchor.SubscribedViews)
-        {
-            float y = Geometry.Height - subscribed.Geometry.Height;
-            subscribed.Geometry = new Rect(subscribed.Geometry.X, y,
-                subscribed.Geometry.Width, subscribed.Geometry.Height);
-        }
-    }
 }
