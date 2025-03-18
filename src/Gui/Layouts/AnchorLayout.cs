@@ -77,12 +77,17 @@ public class AnchorLayout
         {
             if (value != null)
             {
-                TopAnchorView = value.View;
+                TopAnchorLine = value;
                 value.Subscribed.Add(this, Anchor.Top);
             }
             else
             {
-                TopAnchorView = null;
+                if (TopAnchorLine == null)
+                {
+                    return;
+                }
+                TopAnchorLine.Subscribed.Remove(this);
+                TopAnchorLine = null;
             }
         }
     }
@@ -93,14 +98,19 @@ public class AnchorLayout
         {
             if (value != null)
             {
-                BottomAnchorView = value.View;
+                BottomAnchorLine = value;
                 Console.WriteLine("Anchor.Bottom added. " + this.GetHashCode());
                 Console.WriteLine(" |- Target: " + value.GetHashCode());
                 value.Subscribed.Add(this, Anchor.Bottom);
             }
             else
             {
-                BottomAnchorView = null;
+                if (BottomAnchorLine == null)
+                {
+                    return;
+                }
+                BottomAnchorLine.Subscribed.Remove(this);
+                BottomAnchorLine = null;
             }
         }
     }
@@ -114,11 +124,20 @@ public class AnchorLayout
                 FillAnchorView = value;
                 value.FillViews.Add(View);
             }
+            else
+            {
+                if (FillAnchorView == null)
+                {
+                    return;
+                }
+                FillAnchorView.FillViews.Remove(View);
+                FillAnchorView = null;
+            }
         }
     }
 
-    internal View? TopAnchorView { get; set; } = null;
-    internal View? BottomAnchorView { get; set; } = null;
+    internal AnchorLine? TopAnchorLine { get; set; } = null;
+    internal AnchorLine? BottomAnchorLine { get; set; } = null;
     internal View? LeftAnchorView { get; set; } = null;
     internal View? RightAnchorView { get; set; } = null;
     internal View? FillAnchorView { get; set; } = null;
@@ -132,11 +151,11 @@ public class AnchorLayout
     /// </summary>
     internal void OnTopAnchorMove(Anchor destAnchor)
     {
-        if (TopAnchorView == null)
+        if (TopAnchorLine == null)
         {
             return;
         }
-        Rect anchorGeo = TopAnchorView.Geometry;
+        Rect anchorGeo = TopAnchorLine.View.Geometry;
         if (destAnchor == Anchor.Top)
         {
             View.Geometry = new Rect(View.Geometry.X,
@@ -157,11 +176,11 @@ public class AnchorLayout
     /// </summary>
     internal void OnBottomAnchorMove(Anchor destAnchor)
     {
-        if (BottomAnchorView == null)
+        if (BottomAnchorLine == null)
         {
             return;
         }
-        Rect anchorGeo = BottomAnchorView.Geometry;
+        Rect anchorGeo = BottomAnchorLine.View.Geometry;
         if (destAnchor == Anchor.Top)
         {
             View.Geometry = new Rect(View.Geometry.X,
@@ -182,11 +201,11 @@ public class AnchorLayout
     //=======================
     internal void OnTopAnchorResize(Anchor destAnchor)
     {
-        if (TopAnchorView == null)
+        if (TopAnchorLine == null)
         {
             return;
         }
-        Rect anchorGeo = TopAnchorView.Geometry;
+        Rect anchorGeo = TopAnchorLine.View.Geometry;
         if (destAnchor == Anchor.Bottom)
         {
             View.Geometry = new Rect(View.Geometry.X,
@@ -201,11 +220,11 @@ public class AnchorLayout
 
     internal void OnBottomAnchorResize(Anchor destAnchor)
     {
-        if (BottomAnchorView == null)
+        if (BottomAnchorLine == null)
         {
             return;
         }
-        Rect anchorGeo = BottomAnchorView.Geometry;
+        Rect anchorGeo = BottomAnchorLine.View.Geometry;
         if (destAnchor == Anchor.Bottom)
         {
             View.Geometry = new Rect(View.Geometry.X,
