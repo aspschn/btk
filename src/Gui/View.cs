@@ -202,6 +202,11 @@ public class View
     {
         _topAnchor.OnAnchorMove(this, evt);
         _bottomAnchor.OnAnchorMove(this, evt);
+        // Anchor.Fill
+        foreach (View view in FillViews)
+        {
+            view.Geometry = new Rect(0.0f, 0.0f, Geometry.Width, Geometry.Height);
+        }
         OnMove?.Invoke(this, evt);
     }
 
@@ -209,6 +214,11 @@ public class View
     {
         _topAnchor.OnAnchorResize(this, evt);
         _bottomAnchor.OnAnchorResize(this, evt);
+        // Anchor.Fill
+        foreach (View view in FillViews)
+        {
+            view.Geometry = new Rect(0.0f, 0.0f, Geometry.Width, Geometry.Height);
+        }
         OnResize?.Invoke(this, evt);
     }
 
@@ -347,6 +357,7 @@ public class View
     }
 
     //=============================
-    // Anchor Layout Calculations
+    // Anchor Fill or CenterIn
     //=============================
+    internal List<View> FillViews = [];
 }

@@ -11,6 +11,8 @@ public enum Anchor
     Right,
     HorizontalCenter,
     VerticalCenter,
+    Fill,
+    CenterIn,
 }
 
 public class AnchorLine
@@ -103,10 +105,23 @@ public class AnchorLayout
         }
     }
 
+    public View? Fill
+    {
+        set
+        {
+            if (value != null)
+            {
+                FillAnchorView = value;
+                value.FillViews.Add(View);
+            }
+        }
+    }
+
     internal View? TopAnchorView { get; set; } = null;
     internal View? BottomAnchorView { get; set; } = null;
     internal View? LeftAnchorView { get; set; } = null;
     internal View? RightAnchorView { get; set; } = null;
+    internal View? FillAnchorView { get; set; } = null;
 
     //=====================
     // Anchor View Moved
@@ -194,7 +209,7 @@ public class AnchorLayout
         if (destAnchor == Anchor.Bottom)
         {
             View.Geometry = new Rect(View.Geometry.X,
-                anchorGeo.Height - View.Geometry.Height,
+                anchorGeo.Y + anchorGeo.Height - View.Geometry.Height,
                 View.Geometry.Width,
                 View.Geometry.Height);
         } else if (destAnchor == Anchor.Top)
