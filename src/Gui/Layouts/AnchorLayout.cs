@@ -142,6 +142,11 @@ public class AnchorLayout
     internal View? RightAnchorView { get; set; } = null;
     internal View? FillAnchorView { get; set; } = null;
 
+    public float TopMargin { get; set; } = 0.0f;
+    public float BottomMargin { get; set; } = 0.0f;
+    public float LeftMargin { get; set; } = 0.0f;
+    public float RightMargin { get; set; } = 0.0f;
+
     //=====================
     // Anchor View Moved
     //=====================
@@ -159,13 +164,13 @@ public class AnchorLayout
         if (destAnchor == Anchor.Top)
         {
             View.Geometry = new Rect(View.Geometry.X,
-                anchorGeo.Y,
+                anchorGeo.Y + TopMargin,
                 View.Geometry.Width,
                 View.Geometry.Height);
         } else if (destAnchor == Anchor.Bottom)
         {
             View.Geometry = new Rect(View.Geometry.X,
-                anchorGeo.Y + anchorGeo.Height,
+                anchorGeo.Y + anchorGeo.Height + TopMargin,
                 View.Geometry.Width,
                 View.Geometry.Height);
         }
@@ -184,13 +189,13 @@ public class AnchorLayout
         if (destAnchor == Anchor.Top)
         {
             View.Geometry = new Rect(View.Geometry.X,
-                anchorGeo.Y - View.Geometry.Height,
+                anchorGeo.Y - View.Geometry.Height + BottomMargin,
                 View.Geometry.Width,
                 View.Geometry.Height);
         } else if (destAnchor == Anchor.Bottom)
         {
             View.Geometry = new Rect(View.Geometry.X,
-                anchorGeo.Y + anchorGeo.Height - View.Geometry.Height,
+                anchorGeo.Y + anchorGeo.Height - View.Geometry.Height - BottomMargin,
                 View.Geometry.Width,
                 View.Geometry.Height);
         }
@@ -228,7 +233,7 @@ public class AnchorLayout
         if (destAnchor == Anchor.Bottom)
         {
             View.Geometry = new Rect(View.Geometry.X,
-                anchorGeo.Y + anchorGeo.Height - View.Geometry.Height,
+                anchorGeo.Y + anchorGeo.Height - View.Geometry.Height - BottomMargin,
                 View.Geometry.Width,
                 View.Geometry.Height);
         } else if (destAnchor == Anchor.Top)

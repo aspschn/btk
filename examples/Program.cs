@@ -22,6 +22,7 @@ public class Program
         View view = new View(mainView, new Rect(0.0f, 0.0f, 50.0f, 50.0f));
         view.Color = new Color(255, 0, 0, 255);
         view.Anchors.Bottom = mainView.BottomAnchor;
+        view.Anchors.BottomMargin = 20.0f;
 
         View bottomToTop = new View(mainView, new Rect(0.0f, 0.0f, 10.0f, 10.0f));
         bottomToTop.Color = new Color(0, 0, 255, 255);
@@ -38,6 +39,7 @@ public class Program
         View bottomToBottom = new View(mainView, new Rect(40.0f, 0.0f, 10.0f, 10.0f));
         bottomToBottom.Color = new Color(255, 255, 0, 255);
         bottomToBottom.Anchors.Bottom = view.BottomAnchor;
+        bottomToBottom.Anchors.BottomMargin = 5.0f;
 
         window.Show();
 
