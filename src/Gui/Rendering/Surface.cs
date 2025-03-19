@@ -127,8 +127,19 @@ public class Surface
 
     public void Resize(SurfaceResizeEdge edge)
     {
-        // TODO: All edges.
-        Swingby.sb_desktop_surface_toplevel_resize(_sbDesktopSurface, Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM_RIGHT);
+        int sbEdge = edge switch
+        {
+            SurfaceResizeEdge.TopLeft => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP_LEFT,
+            SurfaceResizeEdge.Top => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP,
+            SurfaceResizeEdge.TopRight => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_TOP_RIGHT,
+            SurfaceResizeEdge.Right => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_RIGHT,
+            SurfaceResizeEdge.BottomRight => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM_RIGHT,
+            SurfaceResizeEdge.Bottom => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM,
+            SurfaceResizeEdge.BottomLeft => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_BOTTOM_LEFT,
+            SurfaceResizeEdge.Left => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_LEFT,
+            _ => Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_RESIZE_EDGE_NONE
+        };
+        Swingby.sb_desktop_surface_toplevel_resize(_sbDesktopSurface, sbEdge);
     }
 
     protected IntPtr _sbDesktopSurface;
