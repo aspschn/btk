@@ -330,6 +330,9 @@ internal class Swingby
     internal static extern void sb_desktop_surface_toplevel_close(IntPtr desktopSurface);
 
     [DllImport(Libswingby)]
+    internal static extern void sb_desktop_surface_toplevel_set_minimized(IntPtr desktopSurface);
+
+    [DllImport(Libswingby)]
     internal static extern void sb_desktop_surface_toplevel_move(IntPtr desktopSurface);
 
     [DllImport(Libswingby)]

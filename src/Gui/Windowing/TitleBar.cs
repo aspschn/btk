@@ -17,7 +17,9 @@ public class TitleBarButton : View
     private Color _closeColor = new Color(255, 0, 0, 255);
     private Color _closeHoverColor = new Color(255, 100, 100, 255);
     private Color _minimizeColor = new Color(255, 255, 0, 255);
-    private Color _maximizeColor = new Color(0, 255, 0, 255);
+    private Color _minimizeHoverColor = new Color(255, 255, 100, 255);
+    private Color _maximizeColor = new Color(0, 255, 0, 125);
+    private Color _maximizeHoverColor = new Color(100, 255, 100, 255);
 
     public TitleBarButton(TitleBarButtonAction action, View parent) : base(parent, new Rect(0.0f, 0.0f, 20.0f, 20.0f))
     {
@@ -39,6 +41,8 @@ public class TitleBarButton : View
         base.Color = _action switch
         {
             TitleBarButtonAction.Close => _closeHoverColor,
+            TitleBarButtonAction.Minimize => _minimizeHoverColor,
+            TitleBarButtonAction.Maximize => _maximizeHoverColor,
             _ => base.Color
         };
         base.PointerEnterEvent(evt);
@@ -49,6 +53,8 @@ public class TitleBarButton : View
         base.Color = _action switch
         {
             TitleBarButtonAction.Close => _closeColor,
+            TitleBarButtonAction.Minimize => _minimizeColor,
+            TitleBarButtonAction.Maximize => _maximizeColor,
             _ => base.Color
         };
         base.PointerLeaveEvent(evt);
@@ -88,6 +94,11 @@ public class TitleBar : View, IWindowDecoration
         _minimizeButton.Anchors.Left = _closeButton.RightAnchor;
         _minimizeButton.Anchors.LeftMargin = 5.0f;
         _minimizeButton.Anchors.Top = _closeButton.TopAnchor;
+        _minimizeButton.OnPointerClick += (v, evt) =>
+        {
+            _window.Minimize();
+            evt.Propagation = false;
+        };
         // Maximize/Restore button.
         _maximizeButton = new TitleBarButton(TitleBarButtonAction.Maximize, this);
         _maximizeButton.Anchors.LeftMargin = 5.0f;

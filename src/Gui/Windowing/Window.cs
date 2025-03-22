@@ -100,9 +100,14 @@ public class Window : Surface
     /// <summary>
     /// Close the window.
     /// </summary>
-    public void Close()
+    public new void Close()
     {
-        Swingby.sb_desktop_surface_toplevel_close(_sbDesktopSurface);
+        base.Close();
+    }
+
+    public void Minimize()
+    {
+        base.SetMinimized();
     }
 
     /// <summary>

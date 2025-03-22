@@ -125,6 +125,22 @@ public class Surface
         Swingby.sb_desktop_surface_hide(_sbDesktopSurface);
     }
 
+    public void Close()
+    {
+        if (Role == SurfaceRole.Toplevel)
+        {
+            Swingby.sb_desktop_surface_toplevel_close(_sbDesktopSurface);
+        }
+    }
+
+    public void SetMinimized()
+    {
+        if (Role == SurfaceRole.Toplevel)
+        {
+            Swingby.sb_desktop_surface_toplevel_set_minimized(_sbDesktopSurface);
+        }
+    }
+
     public void Resize(SurfaceResizeEdge edge)
     {
         int sbEdge = edge switch
