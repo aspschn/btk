@@ -10,6 +10,14 @@ using Btk.Swingby;
 
 public class Window : Surface
 {
+    private WindowShadow? _shadow;
+    private WindowResize? _resize;
+    private WindowBorder? _border;
+    private TitleBar? _titleBar;
+    private View _bodyRoot;
+    private View _body;
+    private Rect _geometry = new Rect(0.0F, 0.0F, 200.0F, 200.0F);
+
     public Window() : base(SurfaceRole.Toplevel)
     {
         // Set the root view color as transparent.
@@ -24,8 +32,14 @@ public class Window : Surface
 
         // Create a body view.
         // THIS ORDER IS IMPORTANT ELSE IT CRASH. REASON WHY I DON'T KNOW.
-        _body = new View(sbRootView, new Rect(0.0f, 0.0f, 200.0f, 200.0f));
+        _bodyRoot = new View(sbRootView, new Rect(0.0f, 0.0f, 200.0f, 200.0f));
+        _bodyRoot.Color = new Color(0, 0, 0, 0);
+        _bodyRoot.Clip = false;
+
+        _body = new View(_bodyRoot, new Rect(0.0f, 0.0f, 200.0f, 200.0f));
         _body.Color = new Color(255, 255, 255, 255);
+        _body.Anchors.Fill = _bodyRoot;
+        _body.Clip = false;
 
         // - Add resize.
         this._resize = new WindowResize(this, _shadow);
@@ -36,7 +50,7 @@ public class Window : Surface
 
         // Set surface size.
         this.SurfaceSize = this.CalculateSurfaceSize();
-        _body.Geometry = CalculateBodyGeometry();
+        _bodyRoot.Geometry = CalculateBodyGeometry();
         if (this.HasDecoration) {
             this.UpdateDecoration();
         }
@@ -71,12 +85,12 @@ public class Window : Surface
     /// </summary>
     public new Size Size
     {
-        get => this._body.Geometry.Size;
+        get => this._bodyRoot.Geometry.Size;
         set
         {
             Console.WriteLine("Size setter");
-            var prevGeo = _body.Geometry;
-            _body.Geometry = new Rect(prevGeo.X, prevGeo.Y, value.Width, value.Height);
+            var prevGeo = _bodyRoot.Geometry;
+            _bodyRoot.Geometry = new Rect(prevGeo.X, prevGeo.Y, value.Width, value.Height);
         }
     }
 
@@ -188,8 +202,8 @@ public class Window : Surface
     /// <returns></returns>
     private Rect CalculateBodyGeometry()
     {
-        var width = _body.Geometry.Width;
-        var height = _body.Geometry.Height;
+        var width = _bodyRoot.Geometry.Width;
+        var height = _bodyRoot.Geometry.Height;
         var x = 0.0f;
         var y = 0.0f;
         if (HasDecoration) {
@@ -285,11 +299,4 @@ public class Window : Surface
         ResizeEvent evt = new ResizeEvent(new Size(oldWidth, oldHeight), new Size(width, height));
         this.ResizeEvent(evt);
     }
-
-    private WindowShadow? _shadow;
-    private WindowResize? _resize;
-    private WindowBorder? _border;
-    private TitleBar? _titleBar;
-    private View _body;
-    private Rect _geometry = new Rect(0.0F, 0.0F, 200.0F, 200.0F);
 }
