@@ -392,6 +392,9 @@ internal class Swingby
     internal static extern void sb_view_add_filter(IntPtr view, IntPtr filter);
 
     [DllImport(Libswingby)]
+    internal static extern void sb_view_set_clip(IntPtr view, [MarshalAs(UnmanagedType.I1)]bool clip);
+
+    [DllImport(Libswingby)]
     internal static extern void sb_view_add_event_listener(IntPtr view, int eventType, EventListener listener);
 
     //==================

@@ -17,6 +17,7 @@ public class View
     private List<View> _children = [];
     private Rect _geometry;
     private Color _color;
+    private bool _clip;
     private ViewRadius _radius;
     private AnchorLine _topAnchor;
     private AnchorLine _leftAnchor;
@@ -154,9 +155,23 @@ public class View
         set => Swingby.sb_view_set_cursor_shape(_sbView, Swingby.FromCursorShape(value));
     }
 
+    public bool Clip
+    {
+        get => this._clip;
+        set
+        {
+            this._clip = value;
+            Swingby.sb_view_set_clip(this._sbView, value);
+        }
+    }
+
     public AnchorLine TopAnchor => _topAnchor;
 
     public AnchorLine BottomAnchor => _bottomAnchor;
+
+    public AnchorLine LeftAnchor => _leftAnchor;
+
+    public AnchorLine RightAnchor => _rightAnchor;
 
     public AnchorLayout Anchors
     {
@@ -202,6 +217,8 @@ public class View
     {
         _topAnchor.OnAnchorMove(this, evt);
         _bottomAnchor.OnAnchorMove(this, evt);
+        _leftAnchor.OnAnchorMove(this, evt);
+        _rightAnchor.OnAnchorMove(this, evt);
         // Anchor.Fill
         foreach (View view in FillViews)
         {
@@ -214,6 +231,8 @@ public class View
     {
         _topAnchor.OnAnchorResize(this, evt);
         _bottomAnchor.OnAnchorResize(this, evt);
+        _leftAnchor.OnAnchorResize(this, evt);
+        _rightAnchor.OnAnchorResize(this, evt);
         // Anchor.Fill
         foreach (View view in FillViews)
         {

@@ -35,6 +35,12 @@ public class AnchorLine
                 case Anchor.Bottom:
                     layout.OnBottomAnchorMove(Anchor);
                     break;
+                case Anchor.Left:
+                    layout.OnLeftAnchorMove(Anchor);
+                    break;
+                case Anchor.Right:
+                    layout.OnRightAnchorMove(Anchor);
+                    break;
             }
         }
     }
@@ -50,6 +56,12 @@ public class AnchorLine
                     break;
                 case Anchor.Bottom:
                     layout.OnBottomAnchorResize(Anchor);
+                    break;
+                case Anchor.Left:
+                    layout.OnLeftAnchorResize(Anchor);
+                    break;
+                case Anchor.Right:
+                    layout.OnRightAnchorResize(Anchor);
                     break;
             }
         }
@@ -115,6 +127,50 @@ public class AnchorLayout
         }
     }
 
+    public AnchorLine? Left
+    {
+        set
+        {
+            if (value != null)
+            {
+                LeftAnchorLine = value;
+                value.Subscribed.Add(this, Anchor.Left);
+            }
+            else
+            {
+                if (LeftAnchorLine == null)
+                {
+                    return;
+                }
+
+                LeftAnchorLine.Subscribed.Remove(this);
+                LeftAnchorLine = null;
+            }
+        }
+    }
+
+    public AnchorLine? Right
+    {
+        set
+        {
+            if (value != null)
+            {
+                RightAnchorLine = value;
+                value.Subscribed.Add(this, Anchor.Right);
+            }
+            else
+            {
+                if (RightAnchorLine == null)
+                {
+                    return;
+                }
+
+                RightAnchorLine.Subscribed.Remove(this);
+                RightAnchorLine = null;
+            }
+        }
+    }
+
     public View? Fill
     {
         set
@@ -138,9 +194,10 @@ public class AnchorLayout
 
     internal AnchorLine? TopAnchorLine { get; set; } = null;
     internal AnchorLine? BottomAnchorLine { get; set; } = null;
-    internal View? LeftAnchorView { get; set; } = null;
-    internal View? RightAnchorView { get; set; } = null;
+    internal AnchorLine? LeftAnchorLine { get; set; } = null;
+    internal AnchorLine? RightAnchorLine { get; set; } = null;
     internal View? FillAnchorView { get; set; } = null;
+    internal View? CenterInView { get; set; } = null;
 
     public float TopMargin { get; set; } = 0.0f;
     public float BottomMargin { get; set; } = 0.0f;
@@ -201,6 +258,41 @@ public class AnchorLayout
         }
     }
 
+    internal void OnLeftAnchorMove(Anchor destAnchor)
+    {
+        if (LeftAnchorLine == null)
+        {
+            return;
+        }
+        Rect anchorGeo = LeftAnchorLine.View.Geometry;
+        if (destAnchor == Anchor.Left)
+        {
+            //
+        } else if (destAnchor == Anchor.Right)
+        {
+            View.Geometry = new Rect(anchorGeo.X + anchorGeo.Width + LeftMargin,
+                View.Geometry.Y,
+                View.Geometry.Width,
+                View.Geometry.Height);
+        }
+    }
+
+    internal void OnRightAnchorMove(Anchor destAnchor)
+    {
+        if (RightAnchorLine == null)
+        {
+            return;
+        }
+        Rect anchorGeo = RightAnchorLine.View.Geometry;
+        if (destAnchor == Anchor.Right)
+        {
+            //
+        } else if (destAnchor == Anchor.Left)
+        {
+            //
+        }
+    }
+
     //=======================
     // Anchor View Resized
     //=======================
@@ -237,6 +329,38 @@ public class AnchorLayout
                 View.Geometry.Width,
                 View.Geometry.Height);
         } else if (destAnchor == Anchor.Top)
+        {
+            //
+        }
+    }
+
+    internal void OnLeftAnchorResize(Anchor destAnchor)
+    {
+        if (LeftAnchorLine == null)
+        {
+            return;
+        }
+        Rect anchorGeo = LeftAnchorLine.View.Geometry;
+        if (destAnchor == Anchor.Left)
+        {
+            //
+        } else if (destAnchor == Anchor.Right)
+        {
+            //
+        }
+    }
+
+    internal void OnRightAnchorResize(Anchor destAnchor)
+    {
+        if (RightAnchorLine == null)
+        {
+            return;
+        }
+        Rect anchorGeo = RightAnchorLine.View.Geometry;
+        if (destAnchor == Anchor.Right)
+        {
+            //
+        } else if (destAnchor == Anchor.Left)
         {
             //
         }
