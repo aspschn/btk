@@ -29,6 +29,7 @@ public class Surface
     //====================
     private Swingby.EventListener? _resizeEventListener;        // Swingby surface resize event.
     private Swingby.EventListener? _resizingEventListener;      // Swingby desktop surface resize event.
+    private Swingby.EventListener? _stateChangeEventListener;
 
     public Surface(SurfaceRole role, Surface? parent = null)
     {
@@ -127,6 +128,8 @@ public class Surface
         }
     }
 
+    public bool Activated { get; set; }
+
     public void Show()
     {
         Swingby.sb_desktop_surface_show(_sbDesktopSurface);
@@ -178,6 +181,14 @@ public class Surface
     {
     }
 
+    protected virtual void StateChangeEvent(StateChangeEvent evt)
+    {
+        if (evt.State == ToplevelState.Activated)
+        {
+            Activated = evt.Value;
+        }
+    }
+
     private void AddEventListeners()
     {
         IntPtr sbDesktopSurface = _sbDesktopSurface;
@@ -188,6 +199,9 @@ public class Surface
 
         _resizingEventListener = new Swingby.EventListener(CallResizingEvent);
         Swingby.sb_desktop_surface_add_event_listener(sbDesktopSurface, Swingby.SB_EVENT_TYPE_RESIZE, _resizingEventListener);
+
+        _stateChangeEventListener = new Swingby.EventListener(CallStateChangeEvent);
+        Swingby.sb_desktop_surface_add_event_listener(sbDesktopSurface, Swingby.SB_EVENT_TYPE_STATE_CHANGE, _stateChangeEventListener);
     }
 
     private void CallResizeEvent(IntPtr sbEvent)
@@ -220,5 +234,19 @@ public class Surface
         Size size = new Size(width, height);
 
         ResizingEvent(new ResizeEvent(oldSize, size));
+    }
+
+    private void CallStateChangeEvent(IntPtr sbEvent)
+    {
+        int sbState = Swingby.sb_event_state_change_state(sbEvent);
+        bool value = Swingby.sb_event_state_change_value(sbEvent);
+
+        ToplevelState state = sbState switch
+        {
+            Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_STATE_MAXIMIZED => ToplevelState.Maximized,
+            Swingby.SB_DESKTOP_SURFACE_TOPLEVEL_STATE_ACTIVATED => ToplevelState.Activated,
+        };
+
+        StateChangeEvent(new StateChangeEvent(state, value));
     }
 }

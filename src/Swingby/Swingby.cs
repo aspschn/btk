@@ -198,6 +198,8 @@ internal class Swingby
     internal const int SB_DESKTOP_SURFACE_TOPLEVEL_STATE_NORMAL = 0;
     internal const int SB_DESKTOP_SURFACE_TOPLEVEL_STATE_MAXIMIZED = 1;
     internal const int SB_DESKTOP_SURFACE_TOPLEVEL_STATE_FULLSCREEN = 2;
+    internal const int SB_DESKTOP_SURFACE_TOPLEVEL_STATE_RESIZING = 4;
+    internal const int SB_DESKTOP_SURFACE_TOPLEVEL_STATE_ACTIVATED = 8;
 
     // enum sb_view_fill_type
     internal const int SB_VIEW_FILL_TYPE_SINGLE_COLOR = 0;
@@ -467,6 +469,13 @@ internal class Swingby
 
     [DllImport(Libswingby)]
     internal static extern IntPtr sb_event_move_position(IntPtr sbEvent);
+
+    [DllImport(Libswingby)]
+    internal static extern int sb_event_state_change_state(IntPtr sbEvent);
+
+    [DllImport(Libswingby)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    internal static extern bool sb_event_state_change_value(IntPtr sbEvent);
 
     //==================
     // Structs

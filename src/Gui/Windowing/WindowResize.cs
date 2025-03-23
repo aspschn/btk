@@ -121,4 +121,6 @@ public class WindowResize : View, IWindowDecoration
     {
         get => this._thickness;
     }
+
+    public bool Activated { get; set; }
 }

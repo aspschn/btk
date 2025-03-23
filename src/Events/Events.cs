@@ -15,6 +15,7 @@ public enum EventType
     PointerScroll,
     Move,
     Resize,
+    StateChange,
 }
 
 public class Event

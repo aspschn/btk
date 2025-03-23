@@ -73,13 +73,16 @@ public class TitleBar : View, IWindowDecoration
     private TitleBarButton _closeButton;
     private TitleBarButton _minimizeButton;
     private TitleBarButton _maximizeButton;
+    private bool _activated;
+    private readonly Color _activeColor = new Color(128, 128, 128, 255);
+    private readonly Color _inactiveColor = new Color(192, 192, 192, 255);
 
     public TitleBar(Window window, View parent) : base(parent, new Rect(0F, 0F, 10F, 10F))
     {
         _thickness = 30;
         _window = window;
         Pressed = false;
-        Color = new Color(128, 128, 128, 255);
+        Color = _activeColor;
 
         // Close button.
         _closeButton = new TitleBarButton(TitleBarButtonAction.Close, this);
@@ -112,6 +115,23 @@ public class TitleBar : View, IWindowDecoration
     }
 
     private bool Pressed { get; set; }
+
+    public bool Activated
+    {
+        get => _activated;
+        set
+        {
+            _activated = value;
+            if (value)
+            {
+                Color = _activeColor;
+            }
+            else
+            {
+                Color = _inactiveColor;
+            }
+        }
+    }
 
     protected override void PointerMoveEvent(PointerEvent evt)
     {

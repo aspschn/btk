@@ -35,6 +35,8 @@ public class WindowBorder : View, IWindowDecoration
         get => _thickness;
     }
 
+    public bool Activated { get; set; }
+
     public void UpdateBorderEdges()
     {
         _topEdge.Geometry = new Rect(0.0f, 0.0f, Geometry.Width, _thickness);

@@ -11,12 +11,15 @@ using Btk.Swingby;
 public interface IWindowDecoration
 {
     public uint Thickness { get; }
+
+    public bool Activated { get; set; }
 }
 
 public class WindowShadow : View, IWindowDecoration
 {
     private uint _thickness;
     private View _dummy;
+    private bool _activated;
 
     public WindowShadow(Window window, IntPtr rootView) : base(rootView, new Rect(0.0F, 0.0F, 10.0F, 10.0F))
     {
@@ -32,6 +35,19 @@ public class WindowShadow : View, IWindowDecoration
     public uint Thickness
     {
         get => this._thickness;
+    }
+
+    public bool Activated
+    {
+        get => _activated;
+        set
+        {
+            _activated = value;
+            if (value)
+            {
+                // TODO. Change shadow.
+            }
+        }
     }
 
     public void UpdateShadow()

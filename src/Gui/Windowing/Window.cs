@@ -280,4 +280,19 @@ public class Window : Surface
         base.WMGeometry = CalculateWindowGeometry();
         base.InputGeometry = CalculateInputGeometry();
     }
+
+    protected override void StateChangeEvent(StateChangeEvent evt)
+    {
+        base.StateChangeEvent(evt);
+
+        if (_shadow != null)
+        {
+            _shadow.Activated = base.Activated;
+        }
+
+        if (_titleBar != null)
+        {
+            _titleBar.Activated = base.Activated;
+        }
+    }
 }
