@@ -19,11 +19,25 @@ public class View
     private Color _color;
     private bool _clip;
     private ViewRadius _radius;
+    //=================
+    // Anchor Lines
+    //=================
     private AnchorLine _topAnchor;
     private AnchorLine _leftAnchor;
     private AnchorLine _bottomAnchor;
     private AnchorLine _rightAnchor;
     private AnchorLayout _anchors;
+    //==================
+    // Event Listeners
+    //==================
+    private Swingby.EventListener? _enterEventListener;
+    private Swingby.EventListener? _leaveEventListener;
+    private Swingby.EventListener? _pointerMoveEventListener;
+    private Swingby.EventListener? _pressEventListener;
+    private Swingby.EventListener? _releaseEventListener;
+    private Swingby.EventListener? _clickEventListener;
+    private Swingby.EventListener? _moveEventListener;
+    private Swingby.EventListener? _resizeEventListener;
 
     public event EventHandler<PointerEvent>? OnPointerPress = null;
     public event EventHandler<PointerEvent>? OnPointerRelease = null;
@@ -245,29 +259,29 @@ public class View
     {
         IntPtr sbView = this._sbView;
 
-        var enterEventListener = new Swingby.EventListener(this.CallPointerEnterEvent);
-        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_ENTER, enterEventListener);
+        _enterEventListener = new Swingby.EventListener(this.CallPointerEnterEvent);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_ENTER, _enterEventListener);
 
-        var leaveEventListener = new Swingby.EventListener(this.CallPointerLeaveEvent);
-        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_LEAVE, leaveEventListener);
+        _leaveEventListener = new Swingby.EventListener(this.CallPointerLeaveEvent);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_LEAVE, _leaveEventListener);
 
-        var pointerMoveEventListener = new Swingby.EventListener(this.CallPointerMoveEvent);
-        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_MOVE, pointerMoveEventListener);
+        _pointerMoveEventListener = new Swingby.EventListener(this.CallPointerMoveEvent);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_MOVE, _pointerMoveEventListener);
 
-        var pressEventListener = new Swingby.EventListener(this.CallPointerPressEvent);
-        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_PRESS, pressEventListener);
+        _pressEventListener = new Swingby.EventListener(this.CallPointerPressEvent);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_PRESS, _pressEventListener);
 
-        var releaseEventListener = new Swingby.EventListener(this.CallPointerReleaseEvent);
-        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_RELEASE, releaseEventListener);
+        _releaseEventListener = new Swingby.EventListener(this.CallPointerReleaseEvent);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_RELEASE, _releaseEventListener);
 
-        var clickEventListener = new Swingby.EventListener(CallPointerClickEvent);
-        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_CLICK, clickEventListener);
+        _clickEventListener = new Swingby.EventListener(CallPointerClickEvent);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_POINTER_CLICK, _clickEventListener);
 
-        var moveEventListener = new Swingby.EventListener(CallMoveEvent);
-        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_MOVE, moveEventListener);
+        _moveEventListener = new Swingby.EventListener(CallMoveEvent);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_MOVE, _moveEventListener);
 
-        var resizeEventListener = new Swingby.EventListener(CallResizeEvent);
-        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_RESIZE, resizeEventListener);
+        _resizeEventListener = new Swingby.EventListener(CallResizeEvent);
+        Swingby.sb_view_add_event_listener(sbView, Swingby.SB_EVENT_TYPE_RESIZE, _resizeEventListener);
     }
 
     private void CallPointerEnterEvent(IntPtr ftEvent)

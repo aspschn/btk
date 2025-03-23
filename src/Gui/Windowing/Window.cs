@@ -17,6 +17,7 @@ public class Window : Surface
     private View _bodyRoot;
     private View _body;
     private Rect _geometry = new Rect(0.0F, 0.0F, 200.0F, 200.0F);
+    private Swingby.EventListener? _eventListener;
 
     public Window() : base(SurfaceRole.Toplevel)
     {
@@ -284,8 +285,8 @@ public class Window : Surface
 
     private void AddResizeEventListener()
     {
-        var eventListener = new Swingby.EventListener(CallResizeEvent);
-        Swingby.sb_desktop_surface_add_event_listener(base._sbDesktopSurface, Swingby.SB_EVENT_TYPE_RESIZE, eventListener);
+        _eventListener = new Swingby.EventListener(CallResizeEvent);
+        Swingby.sb_desktop_surface_add_event_listener(base._sbDesktopSurface, Swingby.SB_EVENT_TYPE_RESIZE, _eventListener);
     }
 
     private void CallResizeEvent(IntPtr ftEvent)
