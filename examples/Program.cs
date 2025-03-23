@@ -15,6 +15,8 @@ public class Program
 
         Window window = new Window();
 
+        window.Body.Color = new Color(255, 100, 100, 100);
+
         View view = new View(window.Body, new Rect(0.0f, 0.0f, 50.0f, 50.0f));
         view.Color = new Color(255, 0, 0, 255);
         view.Anchors.Bottom = window.Body.BottomAnchor;

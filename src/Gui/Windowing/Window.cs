@@ -240,6 +240,7 @@ public class Window : Surface
                 resizeSize.Width - (_resize.Thickness * 2) + (_border.Thickness * 2),
                 resizeSize.Height - (_resize.Thickness * 2) + (_border.Thickness * 2)
             );
+            _border.UpdateBorderEdges();
         }
 
         if (_titleBar != null) {
