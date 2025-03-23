@@ -178,6 +178,7 @@ internal class Swingby
     internal const int SB_EVENT_TYPE_MOVE = 100;
     internal const int SB_EVENT_TYPE_RESIZE = 101;
     internal const int SB_EVENT_TYPE_STATE_CHANGE = 110;
+    internal const int SB_EVENT_TYPE_PREFERRED_SCALE = 130;
 
     // enum sb_desktop_surface_role
     internal const int SB_DESKTOP_SURFACE_ROLE_TOPLEVEL = 0;
@@ -400,6 +401,12 @@ internal class Swingby
     internal static extern void sb_surface_set_input_geometry(IntPtr surface, IntPtr geometry);
 
     [DllImport(Libswingby)]
+    internal static extern UInt32 sb_surface_scale(IntPtr surface);
+
+    [DllImport(Libswingby)]
+    internal static extern void sb_surface_set_scale(IntPtr surface, UInt32 scale);
+
+    [DllImport(Libswingby)]
     internal static extern void sb_surface_add_event_listener(IntPtr surface, int eventType,
         EventListener listener);
 
@@ -476,6 +483,9 @@ internal class Swingby
     [DllImport(Libswingby)]
     [return: MarshalAs(UnmanagedType.I1)]
     internal static extern bool sb_event_state_change_value(IntPtr sbEvent);
+
+    [DllImport(Libswingby)]
+    internal static extern UInt32 sb_event_scale_scale(IntPtr sbEvent);
 
     //==================
     // Structs

@@ -30,6 +30,7 @@ public class Surface
     private Swingby.EventListener? _resizeEventListener;        // Swingby surface resize event.
     private Swingby.EventListener? _resizingEventListener;      // Swingby desktop surface resize event.
     private Swingby.EventListener? _stateChangeEventListener;
+    private Swingby.EventListener? _scaleChangeEventListener;
 
     public Surface(SurfaceRole role, Surface? parent = null)
     {
@@ -128,6 +129,20 @@ public class Surface
         }
     }
 
+    public UInt32 Scale
+    {
+        get
+        {
+            IntPtr sbSurface = Swingby.sb_desktop_surface_surface(_sbDesktopSurface);
+            return Swingby.sb_surface_scale(sbSurface);
+        }
+        set
+        {
+            IntPtr sbSurface = Swingby.sb_desktop_surface_surface(_sbDesktopSurface);
+            Swingby.sb_surface_set_scale(sbSurface, value);
+        }
+    }
+
     public bool Activated { get; set; }
 
     public void Show()
@@ -202,6 +217,10 @@ public class Surface
 
         _stateChangeEventListener = new Swingby.EventListener(CallStateChangeEvent);
         Swingby.sb_desktop_surface_add_event_listener(sbDesktopSurface, Swingby.SB_EVENT_TYPE_STATE_CHANGE, _stateChangeEventListener);
+
+        _scaleChangeEventListener = new Swingby.EventListener(CallScaleChangeEvent);
+        Swingby.sb_surface_add_event_listener(sbSurface, Swingby.SB_EVENT_TYPE_PREFERRED_SCALE,
+            _scaleChangeEventListener);
     }
 
     private void CallResizeEvent(IntPtr sbEvent)
@@ -248,5 +267,14 @@ public class Surface
         };
 
         StateChangeEvent(new StateChangeEvent(state, value));
+    }
+
+    private void CallScaleChangeEvent(IntPtr sbEvent)
+    {
+        UInt32 scale = Swingby.sb_event_scale_scale(sbEvent);
+
+        Scale = scale;
+
+        // ScaleChangeEvent(new ScaleEvent(scale));
     }
 }
