@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 
 using Btk.Drawing;
 using Btk.Swingby;
+using Btk.Events;
 
 public enum SurfaceResizeEdge
 {
@@ -20,6 +21,15 @@ public enum SurfaceResizeEdge
 
 public class Surface
 {
+    protected IntPtr _sbDesktopSurface;
+    private Surface? _parent;
+    private Rect? _inputGeometry;
+    //====================
+    // Event Listeners
+    //====================
+    private Swingby.EventListener? _resizeEventListener;        // Swingby surface resize event.
+    private Swingby.EventListener? _resizingEventListener;      // Swingby desktop surface resize event.
+
     public Surface(SurfaceRole role, Surface? parent = null)
     {
         Role = role;
@@ -29,6 +39,8 @@ public class Surface
         int sbRole = 0;
         sbRole = role == SurfaceRole.Toplevel ? Swingby.SB_DESKTOP_SURFACE_ROLE_TOPLEVEL : Swingby.SB_DESKTOP_SURFACE_ROLE_POPUP;
         _sbDesktopSurface = Swingby.sb_desktop_surface_new(sbRole);
+
+        AddEventListeners();
     }
 
     public SurfaceRole Role { get; set; }
@@ -158,7 +170,55 @@ public class Surface
         Swingby.sb_desktop_surface_toplevel_resize(_sbDesktopSurface, sbEdge);
     }
 
-    protected IntPtr _sbDesktopSurface;
-    private Surface? _parent;
-    private Rect? _inputGeometry;
+    protected virtual void ResizeEvent(ResizeEvent evt)
+    {
+    }
+
+    protected virtual void ResizingEvent(ResizeEvent evt)
+    {
+    }
+
+    private void AddEventListeners()
+    {
+        IntPtr sbDesktopSurface = _sbDesktopSurface;
+        IntPtr sbSurface = Swingby.sb_desktop_surface_surface(_sbDesktopSurface);
+
+        _resizeEventListener = new Swingby.EventListener(CallResizeEvent);
+        Swingby.sb_surface_add_event_listener(sbSurface, Swingby.SB_EVENT_TYPE_POINTER_ENTER, _resizeEventListener);
+
+        _resizingEventListener = new Swingby.EventListener(CallResizingEvent);
+        Swingby.sb_desktop_surface_add_event_listener(sbDesktopSurface, Swingby.SB_EVENT_TYPE_RESIZE, _resizingEventListener);
+    }
+
+    private void CallResizeEvent(IntPtr sbEvent)
+    {
+        var sbOldSize = Swingby.sb_event_resize_old_size(sbEvent);
+        var sbSize = Swingby.sb_event_resize_size(sbEvent);
+
+        float oldWidth = Swingby.sb_size_width(sbOldSize);
+        float oldHeight = Swingby.sb_size_height(sbOldSize);
+        float width = Swingby.sb_size_width(sbSize);
+        float height = Swingby.sb_size_height(sbSize);
+
+        Size oldSize = new Size(oldWidth, oldHeight);
+        Size size = new Size(width, height);
+
+        ResizeEvent(new ResizeEvent(oldSize, size));
+    }
+
+    private void CallResizingEvent(IntPtr sbEvent)
+    {
+        var sbOldSize = Swingby.sb_event_resize_old_size(sbEvent);
+        var sbSize = Swingby.sb_event_resize_size(sbEvent);
+
+        float oldWidth = Swingby.sb_size_width(sbOldSize);
+        float oldHeight = Swingby.sb_size_height(sbOldSize);
+        float width = Swingby.sb_size_width(sbSize);
+        float height = Swingby.sb_size_height(sbSize);
+
+        Size oldSize = new Size(oldWidth, oldHeight);
+        Size size = new Size(width, height);
+
+        ResizingEvent(new ResizeEvent(oldSize, size));
+    }
 }

@@ -17,7 +17,6 @@ public class Window : Surface
     private View _bodyRoot;
     private View _body;
     private Rect _geometry = new Rect(0.0F, 0.0F, 200.0F, 200.0F);
-    private Swingby.EventListener? _eventListener;
 
     public Window() : base(SurfaceRole.Toplevel)
     {
@@ -57,7 +56,6 @@ public class Window : Surface
         }
 
         // Add event listeners.
-        this.AddResizeEventListener();
     }
 
     public new void Show()
@@ -255,7 +253,7 @@ public class Window : Surface
         }
     }
 
-    protected virtual void ResizeEvent(ResizeEvent evt)
+    protected override void ResizingEvent(ResizeEvent evt)
     {
         Console.WriteLine("Window resize event.");
         Console.WriteLine(evt.Size.Width);
@@ -281,24 +279,5 @@ public class Window : Surface
         // Update WM geometry.
         base.WMGeometry = CalculateWindowGeometry();
         base.InputGeometry = CalculateInputGeometry();
-    }
-
-    private void AddResizeEventListener()
-    {
-        _eventListener = new Swingby.EventListener(CallResizeEvent);
-        Swingby.sb_desktop_surface_add_event_listener(base._sbDesktopSurface, Swingby.SB_EVENT_TYPE_RESIZE, _eventListener);
-    }
-
-    private void CallResizeEvent(IntPtr ftEvent)
-    {
-        IntPtr oldSize = Swingby.sb_event_resize_size(ftEvent);
-        var oldWidth = Swingby.sb_size_width(oldSize);
-        var oldHeight = Swingby.sb_size_height(oldSize);
-        IntPtr size = Swingby.sb_event_resize_size(ftEvent);
-        var width = Swingby.sb_size_width(size);
-        var height = Swingby.sb_size_height(size);
-
-        ResizeEvent evt = new ResizeEvent(new Size(oldWidth, oldHeight), new Size(width, height));
-        this.ResizeEvent(evt);
     }
 }
