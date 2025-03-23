@@ -35,6 +35,7 @@ public class Program
         View logoView = new View(window.Body, new Rect(0.0f, 0.0f, 340.0f, 150.0f));
         logoView.FillType = ViewFillType.Image;
         logoView.Image = image;
+        logoView.Anchors.CenterIn = window.Body;
 
         View bottomToTop = new View(window.Body, new Rect(0.0f, 0.0f, 10.0f, 10.0f));
         bottomToTop.Color = new Color(0, 0, 255, 255);

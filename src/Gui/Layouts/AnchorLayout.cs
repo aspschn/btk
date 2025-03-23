@@ -192,6 +192,28 @@ public class AnchorLayout
         }
     }
 
+    public View? CenterIn
+    {
+        set
+        {
+            if (value != null)
+            {
+                CenterInView = value;
+                value.CenterInViews.Add(View);
+            }
+            else
+            {
+                if (CenterInView == null)
+                {
+                    return;
+                }
+
+                CenterInView.CenterInViews.Remove(View);
+                CenterInView = null;
+            }
+        }
+    }
+
     internal AnchorLine? TopAnchorLine { get; set; } = null;
     internal AnchorLine? BottomAnchorLine { get; set; } = null;
     internal AnchorLine? LeftAnchorLine { get; set; } = null;

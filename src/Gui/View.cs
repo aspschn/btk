@@ -282,6 +282,18 @@ public class View
         {
             view.Geometry = new Rect(0.0f, 0.0f, Geometry.Width, Geometry.Height);
         }
+        // Anchor.CenterIn
+        foreach (View view in CenterInViews)
+        {
+            if (!FillViews.Contains(view))
+            {
+                view.Geometry = new Rect(
+                    Geometry.X + (Geometry.Width - view.Geometry.Width) / 2.0f,
+                    Geometry.Y + (Geometry.Height - view.Geometry.Height) / 2.0f,
+                    view.Geometry.Width,
+                    view.Geometry.Height);
+            }
+        }
         OnMove?.Invoke(this, evt);
     }
 
@@ -295,6 +307,17 @@ public class View
         foreach (View view in FillViews)
         {
             view.Geometry = new Rect(0.0f, 0.0f, Geometry.Width, Geometry.Height);
+        }
+        foreach (View view in CenterInViews)
+        {
+            if (!FillViews.Contains(view))
+            {
+                view.Geometry = new Rect(
+                    Geometry.X + (Geometry.Width - view.Geometry.Width) / 2.0f,
+                    Geometry.Y + (Geometry.Height - view.Geometry.Height) / 2.0f,
+                    view.Geometry.Width,
+                    view.Geometry.Height);
+            }
         }
         OnResize?.Invoke(this, evt);
     }
@@ -437,4 +460,6 @@ public class View
     // Anchor Fill or CenterIn
     //=============================
     internal List<View> FillViews = [];
+
+    internal List<View> CenterInViews = [];
 }
