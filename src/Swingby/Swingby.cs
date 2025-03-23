@@ -20,6 +20,20 @@ internal struct sb_point_t
     }
 }
 
+internal struct sb_point_i_t
+{
+    public Int64 x;
+    public Int64 y;
+
+    internal IntPtr AllocCPtr()
+    {
+        IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(sb_point_i_t)));
+        Marshal.StructureToPtr(this, ptr, false);
+
+        return ptr;
+    }
+}
+
 internal struct sb_size_t
 {
     public float width;
@@ -40,6 +54,20 @@ internal struct sb_size_t
         Marshal.StructureToPtr(this, cPtr, false);
 
         return cPtr;
+    }
+}
+
+internal struct sb_size_i_t
+{
+    public UInt64 width;
+    public UInt64 height;
+
+    internal IntPtr AllocCPtr()
+    {
+        IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(sb_size_i_t)));
+        Marshal.StructureToPtr(this, ptr, false);
+
+        return ptr;
     }
 }
 
@@ -172,8 +200,8 @@ internal class Swingby
     internal const int SB_DESKTOP_SURFACE_TOPLEVEL_STATE_FULLSCREEN = 2;
 
     // enum sb_view_fill_type
-    // internal const int SB_VIEW_FILL_TYPE_SINGLE_COLOR = 0;
-    // internal const int SB_VIEW_FILL_TYPE_IMAGE = 1;
+    internal const int SB_VIEW_FILL_TYPE_SINGLE_COLOR = 0;
+    internal const int SB_VIEW_FILL_TYPE_IMAGE = 1;
 
     // enum sb_cursor_shape
     internal const int SB_CURSOR_SHAPE_NONE = 0;
@@ -300,6 +328,15 @@ internal class Swingby
     internal static int SB_FILTER_TYPE_BLUR = 0;
     internal static int SB_FILTER_TYPE_DROP_SHADOW = 1;
 
+    // enum sb_image_format
+    internal static int SB_IMAGE_FORMAT_RGBA32 = 0;
+    internal static int SB_IMAGE_FORMAT_ARGB32 = 1;
+
+    // enum sb_image_file_format
+    internal static int SB_IMAGE_FILE_FORMAT_PNG = 1;
+    internal static int SB_IMAGE_FILE_FORMAT_JPEG = 2;
+    internal static int SB_IMAGE_FILE_FORMAT_AUTO = 255;
+
     public delegate void EventListener(IntPtr sbEvent);
 
     //==================
@@ -380,6 +417,12 @@ internal class Swingby
     internal static extern void sb_view_set_color(IntPtr view, IntPtr color);
 
     [DllImport(Libswingby)]
+    internal static extern void sb_view_set_image(IntPtr view, IntPtr image);
+
+    [DllImport(Libswingby)]
+    internal static extern void sb_view_set_fill_type(IntPtr view, int fillType);
+
+    [DllImport(Libswingby)]
     internal static extern void sb_view_set_geometry(IntPtr view, IntPtr geometry);
 
     [DllImport(Libswingby)]
@@ -457,4 +500,16 @@ internal class Swingby
 
     [DllImport(Libswingby)]
     internal static extern void sb_filter_drop_shadow_set_color(IntPtr sbFilter, IntPtr color);
+
+    //=================
+    // Image
+    //=================
+    [DllImport(Libswingby)]
+    internal static extern IntPtr sb_image_new(IntPtr sbSize, int format);
+
+    [DllImport(Libswingby)]
+    internal static extern void sb_image_fill(IntPtr sbImage, IntPtr sbColor);
+
+    [DllImport(Libswingby)]
+    internal static extern bool sb_image_load_from_data(IntPtr sbImage, IntPtr data, UInt64 dataLen, int format);
 }

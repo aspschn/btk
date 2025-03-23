@@ -23,6 +23,8 @@
 
   <ItemGroup>
     <Compile Include="src/\**\*.cs" />
+
+    <EmbeddedResource Include="Resources/swingby.png" />
   </ItemGroup>
 
 </Project>

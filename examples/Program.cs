@@ -2,8 +2,10 @@
 namespace Example;
 
 using System;
+using System.Reflection;
 
 using Btk.Drawing;
+using Btk.Drawing.Imaging;
 using Btk.Gui;
 using Btk.Gui.Windowing;
 
@@ -21,6 +23,18 @@ public class Program
         view.Color = new Color(255, 0, 0, 255);
         view.Anchors.Bottom = window.Body.BottomAnchor;
         view.Anchors.BottomMargin = 20.0f;
+
+        // Logo image view.
+        using Stream swingbyStream = typeof(Application).Assembly.GetManifestResourceStream("Btk.Resources.swingby.png");
+        using var ms = new MemoryStream();
+        swingbyStream.CopyTo(ms);
+        byte[] buffer = ms.ToArray();
+        Image image = new Image(new SizeI(10, 10), ImageFormat.Rgba32);
+        image.LoadFromData(buffer);
+
+        View logoView = new View(window.Body, new Rect(0.0f, 0.0f, 340.0f, 150.0f));
+        logoView.FillType = ViewFillType.Image;
+        logoView.Image = image;
 
         View bottomToTop = new View(window.Body, new Rect(0.0f, 0.0f, 10.0f, 10.0f));
         bottomToTop.Color = new Color(0, 0, 255, 255);
