@@ -16,6 +16,18 @@ public struct Point
     public float Y { get; set; }
 }
 
+public struct PointI
+{
+    public PointI(Int64 x, Int64 y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    public Int64 X { get; set; }
+    public Int64 Y { get; set; }
+}
+
 public struct Size
 {
     public Size(float width, float height)
@@ -26,6 +38,18 @@ public struct Size
 
     public float Width { get; set; }
     public float Height { get; set; }
+}
+
+public struct SizeI
+{
+    public SizeI(UInt64 width, UInt64 height)
+    {
+        Width = width;
+        Height = height;
+    }
+
+    public UInt64 Width { get; set; }
+    public UInt64 Height { get; set; }
 }
 
 public struct Rect

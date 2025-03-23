@@ -5,10 +5,17 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
 using Btk.Drawing;
+using Btk.Drawing.Imaging;
 using Btk.Drawing.Effects;
 using Btk.Events;
 using Btk.Gui.Layouts;
 using Btk.Swingby;
+
+public enum ViewFillType
+{
+    SingleColor,
+    Image,
+}
 
 public class View
 {
@@ -17,6 +24,8 @@ public class View
     private List<View> _children = [];
     private Rect _geometry;
     private Color _color;
+    private Image? _image = null;
+    private ViewFillType _fillType = ViewFillType.SingleColor;
     private bool _clip;
     private ViewRadius _radius;
     //=================
@@ -141,6 +150,41 @@ public class View
 
             Swingby.sb_view_set_color(this._sbView, sbColorPtr);
             Marshal.FreeHGlobal(sbColorPtr);
+        }
+    }
+
+    public Image? Image
+    {
+        get => _image;
+        set
+        {
+            this._image = value;
+            if (value != null)
+            {
+                Swingby.sb_view_set_image(_sbView, value._sbImage);
+            }
+            else
+            {
+                Swingby.sb_view_set_image(_sbView, IntPtr.Zero);
+            }
+        }
+    }
+
+    public ViewFillType FillType
+    {
+        get => _fillType;
+        set
+        {
+            _fillType = value;
+            switch (value)
+            {
+                case ViewFillType.SingleColor:
+                    Swingby.sb_view_set_fill_type(_sbView, Swingby.SB_VIEW_FILL_TYPE_SINGLE_COLOR);
+                    break;
+                case ViewFillType.Image:
+                    Swingby.sb_view_set_fill_type(_sbView, Swingby.SB_VIEW_FILL_TYPE_IMAGE);
+                    break;
+            }
         }
     }
 
