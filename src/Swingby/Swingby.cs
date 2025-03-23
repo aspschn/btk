@@ -332,6 +332,11 @@ internal class Swingby
     internal static int SB_IMAGE_FORMAT_RGBA32 = 0;
     internal static int SB_IMAGE_FORMAT_ARGB32 = 1;
 
+    // enum sb_image_file_format
+    internal static int SB_IMAGE_FILE_FORMAT_PNG = 1;
+    internal static int SB_IMAGE_FILE_FORMAT_JPEG = 2;
+    internal static int SB_IMAGE_FILE_FORMAT_AUTO = 255;
+
     public delegate void EventListener(IntPtr sbEvent);
 
     //==================
@@ -504,4 +509,7 @@ internal class Swingby
 
     [DllImport(Libswingby)]
     internal static extern void sb_image_fill(IntPtr sbImage, IntPtr sbColor);
+
+    [DllImport(Libswingby)]
+    internal static extern bool sb_image_load_from_data(IntPtr sbImage, IntPtr data, UInt64 dataLen, int format);
 }

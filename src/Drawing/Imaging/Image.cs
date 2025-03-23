@@ -9,6 +9,12 @@ public enum ImageFormat
     Argb32,
 }
 
+public enum ImageFileFormat
+{
+    Png,
+    Jpeg,
+}
+
 public class Image
 {
     internal IntPtr _sbImage;
@@ -47,5 +53,19 @@ public class Image
         Swingby.sb_image_fill(_sbImage, sbColorPtr);
 
         Marshal.FreeHGlobal(sbColorPtr);
+    }
+
+    public bool LoadFromData(byte[] data)
+    {
+        GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned); // Pin for GC.
+        try
+        {
+            IntPtr ptr = Marshal.UnsafeAddrOfPinnedArrayElement(data, 0);
+            return Swingby.sb_image_load_from_data(_sbImage, ptr, (UInt64)data.Length, Swingby.SB_IMAGE_FILE_FORMAT_AUTO);
+        }
+        finally
+        {
+            handle.Free();
+        }
     }
 }
