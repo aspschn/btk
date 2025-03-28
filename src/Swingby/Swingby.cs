@@ -361,6 +361,9 @@ internal class Swingby
     internal static extern IntPtr sb_desktop_surface_surface(IntPtr desktopSurface);
 
     [DllImport(Libswingby)]
+    internal static extern int sb_desktop_surface_set_parent(IntPtr sbDesktopSurface, IntPtr parent);
+
+    [DllImport(Libswingby)]
     internal static extern void sb_desktop_surface_show(IntPtr desktopSurface);
 
     [DllImport(Libswingby)]
@@ -380,6 +383,12 @@ internal class Swingby
 
     [DllImport(Libswingby)]
     internal static extern void sb_desktop_surface_set_wm_geometry(IntPtr desktopSurface, IntPtr geometry);
+
+    [DllImport(Libswingby)]
+    internal static extern void sb_desktop_surface_popup_set_position(IntPtr desktopSurface, IntPtr position);
+
+    [DllImport(Libswingby)]
+    internal static extern void sb_desktop_surface_free(IntPtr desktopSurface);
 
     [DllImport(Libswingby)]
     internal static extern void sb_desktop_surface_add_event_listener(IntPtr desktopSurface, int eventType,

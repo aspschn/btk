@@ -24,6 +24,7 @@ public class Surface
     protected IntPtr _sbDesktopSurface;
     private Surface? _parent;
     private Rect? _inputGeometry;
+    private Point _popupPosition;
     //====================
     // Event Listeners
     //====================
@@ -41,8 +42,14 @@ public class Surface
         int sbRole = 0;
         sbRole = role == SurfaceRole.Toplevel ? Swingby.SB_DESKTOP_SURFACE_ROLE_TOPLEVEL : Swingby.SB_DESKTOP_SURFACE_ROLE_POPUP;
         _sbDesktopSurface = Swingby.sb_desktop_surface_new(sbRole);
+        Swingby.sb_desktop_surface_set_parent(_sbDesktopSurface, parent?._sbDesktopSurface ?? IntPtr.Zero);
 
         AddEventListeners();
+    }
+
+    ~Surface()
+    {
+        Swingby.sb_desktop_surface_free(_sbDesktopSurface);
     }
 
     public SurfaceRole Role { get; set; }
@@ -140,6 +147,21 @@ public class Surface
         {
             IntPtr sbSurface = Swingby.sb_desktop_surface_surface(_sbDesktopSurface);
             Swingby.sb_surface_set_scale(sbSurface, value);
+        }
+    }
+
+    public Point PopupPosition
+    {
+        get => _popupPosition;
+        set
+        {
+            _popupPosition = value;
+            sb_point_t sbPoint;
+            sbPoint.x = value.X;
+            sbPoint.y = value.Y;
+            var sbPointPtr = sbPoint.AllocCPtr();
+            Swingby.sb_desktop_surface_popup_set_position(_sbDesktopSurface, sbPointPtr);
+            Marshal.FreeHGlobal(sbPointPtr);
         }
     }
 
