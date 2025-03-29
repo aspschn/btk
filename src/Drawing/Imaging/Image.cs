@@ -61,7 +61,13 @@ public class Image
         try
         {
             IntPtr ptr = Marshal.UnsafeAddrOfPinnedArrayElement(data, 0);
-            return Swingby.sb_image_load_from_data(_sbImage, ptr, (UInt64)data.Length, Swingby.SB_IMAGE_FILE_FORMAT_AUTO);
+            bool ret = Swingby.sb_image_load_from_data(_sbImage, ptr, (UInt64)data.Length, Swingby.SB_IMAGE_FILE_FORMAT_AUTO);
+
+            IntPtr sizePtr = Swingby.sb_image_size(_sbImage);
+            sb_size_i_t sbSize = Marshal.PtrToStructure<sb_size_i_t>(sizePtr);
+            Size = new SizeI(sbSize.width, sbSize.height);
+
+            return ret;
         }
         finally
         {
