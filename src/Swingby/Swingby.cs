@@ -539,6 +539,9 @@ internal class Swingby
     internal static extern IntPtr sb_image_size(IntPtr sbImage);
 
     [DllImport(Libswingby)]
+    internal static extern void sb_image_set_data(IntPtr sbImage, IntPtr data, IntPtr size);
+
+    [DllImport(Libswingby)]
     internal static extern void sb_image_fill(IntPtr sbImage, IntPtr sbColor);
 
     [DllImport(Libswingby)]

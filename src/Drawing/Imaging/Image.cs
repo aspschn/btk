@@ -55,6 +55,26 @@ public class Image
         Marshal.FreeHGlobal(sbColorPtr);
     }
 
+    public void SetData(byte[] data, SizeI size)
+    {
+        GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned); // Pin for GC.
+        try
+        {
+            IntPtr ptr = Marshal.UnsafeAddrOfPinnedArrayElement(data, 0);
+            sb_size_i_t sbSizeI = new sb_size_i_t();
+            sbSizeI.width = size.Width;
+            sbSizeI.height = size.Height;
+            var sbSizeIPtr = sbSizeI.AllocCPtr();
+            Swingby.sb_image_set_data(_sbImage, ptr, sbSizeIPtr);
+            Size = size;
+            Marshal.FreeHGlobal(sbSizeIPtr);
+        }
+        finally
+        {
+            handle.Free();
+        }
+    }
+
     public bool LoadFromData(byte[] data)
     {
         GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned); // Pin for GC.
