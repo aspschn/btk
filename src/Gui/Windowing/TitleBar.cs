@@ -1,7 +1,9 @@
 namespace Btk.Gui.Windowing;
 
 using Btk.Drawing;
+using Btk.Drawing.Imaging;
 using Btk.Gui;
+using Btk.Gui.Rendering.Text;
 using Btk.Events;
 
 public enum TitleBarButtonAction
@@ -76,6 +78,8 @@ public class TitleBar : View, IWindowDecoration
     private bool _activated;
     private readonly Color _activeColor = new Color(128, 128, 128, 255);
     private readonly Color _inactiveColor = new Color(192, 192, 192, 255);
+    private Image _windowTitleImage;
+    private View _windowTitle;
 
     public TitleBar(Window window, View parent) : base(parent, new Rect(0F, 0F, 10F, 10F))
     {
@@ -107,6 +111,18 @@ public class TitleBar : View, IWindowDecoration
         _maximizeButton.Anchors.LeftMargin = 5.0f;
         _maximizeButton.Anchors.Left = _minimizeButton.RightAnchor;
         _maximizeButton.Anchors.Top = _closeButton.TopAnchor;
+
+        // Window title.
+        using TextRenderer tr = new TextRenderer();
+        tr.Text = "Window Title";
+        tr.Size = 9.0f;
+        tr.UpdateLayout();
+        _windowTitleImage = tr.ToImage();
+        _windowTitle = new View(this,
+            new Rect(0.0f, 0.0f, _windowTitleImage.Size.Width, _windowTitleImage.Size.Height));
+        _windowTitle.FillType = ViewFillType.Image;
+        _windowTitle.Image = _windowTitleImage;
+        _windowTitle.Anchors.CenterIn = this;
     }
 
     public uint Thickness

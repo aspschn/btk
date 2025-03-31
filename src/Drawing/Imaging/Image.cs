@@ -55,13 +55,39 @@ public class Image
         Marshal.FreeHGlobal(sbColorPtr);
     }
 
+    public void SetData(byte[] data, SizeI size)
+    {
+        GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned); // Pin for GC.
+        try
+        {
+            IntPtr ptr = Marshal.UnsafeAddrOfPinnedArrayElement(data, 0);
+            sb_size_i_t sbSizeI = new sb_size_i_t();
+            sbSizeI.width = size.Width;
+            sbSizeI.height = size.Height;
+            var sbSizeIPtr = sbSizeI.AllocCPtr();
+            Swingby.sb_image_set_data(_sbImage, ptr, sbSizeIPtr);
+            Size = size;
+            Marshal.FreeHGlobal(sbSizeIPtr);
+        }
+        finally
+        {
+            handle.Free();
+        }
+    }
+
     public bool LoadFromData(byte[] data)
     {
         GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned); // Pin for GC.
         try
         {
             IntPtr ptr = Marshal.UnsafeAddrOfPinnedArrayElement(data, 0);
-            return Swingby.sb_image_load_from_data(_sbImage, ptr, (UInt64)data.Length, Swingby.SB_IMAGE_FILE_FORMAT_AUTO);
+            bool ret = Swingby.sb_image_load_from_data(_sbImage, ptr, (UInt64)data.Length, Swingby.SB_IMAGE_FILE_FORMAT_AUTO);
+
+            IntPtr sizePtr = Swingby.sb_image_size(_sbImage);
+            sb_size_i_t sbSize = Marshal.PtrToStructure<sb_size_i_t>(sizePtr);
+            Size = new SizeI(sbSize.width, sbSize.height);
+
+            return ret;
         }
         finally
         {
