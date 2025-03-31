@@ -8,6 +8,7 @@ using Btk.Drawing;
 using Btk.Drawing.Imaging;
 using Btk.Drawing.Effects;
 using Btk.Events;
+using Btk.Gui.Rendering;
 using Btk.Gui.Layouts;
 using Btk.Swingby;
 
@@ -21,6 +22,7 @@ public class View
 {
     private IntPtr _sbView;
     private View? _parent;
+    private Surface _surface;
     private List<View> _children = [];
     private Rect _geometry;
     private Color _color;
@@ -67,6 +69,7 @@ public class View
 
         // Initialize.
         this._parent = parent;
+        this._surface = parent!._surface;
         this._geometry = geometry;
         this._color = new Color(255, 255, 255, 255);
         _radius = new ViewRadius(0.0f, 0.0f, 0.0f, 0.0f);
@@ -95,8 +98,9 @@ public class View
     /// <param name="rootView">
     /// A valid C ptr to the surface's root view.
     /// </param>
+    /// <param name="surface"></param>
     /// <param name="geometry"></param>
-    internal View(IntPtr rootView, Rect geometry)
+    internal View(IntPtr rootView, Surface surface, Rect geometry)
     {
         var ftGeometry = sb_rect_t.FromRect(geometry);
         var ftGeometryCPtr = ftGeometry.AllocCPtr();
@@ -107,6 +111,7 @@ public class View
 
         // Initialize.
         this._parent = null;
+        _surface = surface;
         this._geometry = geometry;
         this._color = new Color(255, 255, 255, 255);
 
@@ -120,6 +125,18 @@ public class View
 
         // Add event listeners.
         this.AddEventListeners();
+    }
+
+    /// <summary>
+    /// This must be set when constructed with C raw pointer root view.
+    /// </summary>
+    public Surface Surface
+    {
+        get => _surface;
+        internal set
+        {
+            _surface = value;
+        }
     }
 
     public Rect Geometry

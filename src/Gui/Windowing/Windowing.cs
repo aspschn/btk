@@ -21,7 +21,7 @@ public class WindowShadow : View, IWindowDecoration
     private View _dummy;
     private bool _activated;
 
-    public WindowShadow(Window window, IntPtr rootView) : base(rootView, new Rect(0.0F, 0.0F, 10.0F, 10.0F))
+    public WindowShadow(Window window, IntPtr rootView) : base(rootView, window, new Rect(0.0F, 0.0F, 10.0F, 10.0F))
     {
         this._thickness = 40;
         _dummy = new View(this, new Rect(0.0f, 0.0f, 10.0f, 10.0f));

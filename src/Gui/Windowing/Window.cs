@@ -29,10 +29,11 @@ public class Window : Surface
         // Add decoration.
         // - Add shadow.
         this._shadow = new WindowShadow(this, sbRootView);
+        _shadow.Surface = this;
 
         // Create a body view.
         // THIS ORDER IS IMPORTANT ELSE IT CRASH. REASON WHY I DON'T KNOW.
-        _bodyRoot = new View(sbRootView, new Rect(0.0f, 0.0f, 200.0f, 200.0f));
+        _bodyRoot = new View(sbRootView, this, new Rect(0.0f, 0.0f, 200.0f, 200.0f));
         _bodyRoot.Color = new Color(0, 0, 0, 0);
         _bodyRoot.Clip = false;
 
