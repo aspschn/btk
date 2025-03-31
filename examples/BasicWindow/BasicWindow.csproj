@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <Reference Include="Btk">
-      <HintPath>../build/Release/Btk.dll</HintPath>
+      <HintPath>../../build/Release/Btk.dll</HintPath>
     </Reference>
   </ItemGroup>
 

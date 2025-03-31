@@ -1,5 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-namespace Example;
+﻿namespace BasicWindow;
 
 using System;
 using System.Reflection;
