@@ -1,6 +1,7 @@
 namespace Btk.Events;
 
 using Btk.Drawing;
+using Btk.Input;
 
 public class PointerEvent : Event
 {
@@ -26,6 +27,8 @@ public class PointerEvent : Event
             this._position.Y = value;
         }
     }
+
+    public PointerButton Button { get; set; } = PointerButton.None;
 
     private Point _position;
 }
