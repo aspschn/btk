@@ -21,6 +21,9 @@ public class Program
         ProgressBar progressBar = new ProgressBar(mainWidget);
         progressBar.Value = 0.5f;
 
+        Label label = new Label("Hello, BTK!", mainWidget);
+        label.Anchors.Top = progressBar.BottomAnchor;
+
         window.Show();
 
         return app.Exec();
