@@ -24,6 +24,9 @@ internal class Pango
     internal static extern IntPtr pango_font_description_from_string(string desc);
 
     [DllImport(Libpango)]
+    internal static extern void pango_font_description_set_absolute_size(IntPtr desc, double size);
+
+    [DllImport(Libpango)]
     internal static extern void pango_layout_set_font_description(IntPtr layout, IntPtr desc);
 
     [DllImport(Libpango)]

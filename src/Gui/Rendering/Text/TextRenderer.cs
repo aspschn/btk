@@ -21,7 +21,8 @@ public class TextRenderer : IDisposable
         _layout = Pango.pango_cairo_create_layout(_context);
 
         Pango.pango_layout_set_text(_layout, Text, -1);
-        IntPtr desc = Pango.pango_font_description_from_string("Sans " + Size.ToString());
+        IntPtr desc = Pango.pango_font_description_from_string("Sans");
+        Pango.pango_font_description_set_absolute_size(desc, Size * Pango.PANGO_SCALE);
         Pango.pango_layout_set_font_description(_layout, desc);
         Pango.pango_font_description_free(desc);
 
@@ -45,7 +46,8 @@ public class TextRenderer : IDisposable
         _layout = Pango.pango_cairo_create_layout(_context);
 
         Pango.pango_layout_set_text(_layout, Text, -1);
-        IntPtr desc = Pango.pango_font_description_from_string("Sans " + Size.ToString());
+        IntPtr desc = Pango.pango_font_description_from_string("Sans");
+        Pango.pango_font_description_set_absolute_size(desc, Size * Pango.PANGO_SCALE);
         Pango.pango_layout_set_font_description(_layout, desc);
         Pango.pango_font_description_free(desc);
 

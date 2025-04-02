@@ -30,7 +30,7 @@ public class Label : Widget
     {
         var scale = base.Surface.Scale;
         using var tr = new TextRenderer();
-        float fontSize = 12.0f * scale;
+        float fontSize = 13.0f * scale;
         tr.Size = fontSize;
         tr.Text = Text;
         tr.UpdateLayout();
