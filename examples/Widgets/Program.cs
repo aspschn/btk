@@ -18,11 +18,15 @@ public class Program
         Window window = new Window();
 
         Widget mainWidget = new Widget(window.Body);
+        mainWidget.Anchors.Fill = window.Body;
         ProgressBar progressBar = new ProgressBar(mainWidget);
         progressBar.Value = 0.5f;
 
         Label label = new Label("Hello, BTK!", mainWidget);
         label.Anchors.Top = progressBar.BottomAnchor;
+
+        PushButton button = new PushButton("Click", mainWidget);
+        button.Anchors.Top = label.BottomAnchor;
 
         window.Show();
 

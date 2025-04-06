@@ -8,6 +8,7 @@ using Btk.Drawing;
 using Btk.Drawing.Imaging;
 using Btk.Drawing.Effects;
 using Btk.Events;
+using Btk.Input;
 using Btk.Gui.Rendering;
 using Btk.Gui.Layouts;
 using Btk.Swingby;
@@ -422,6 +423,18 @@ public class View
     {
         var evt = new PointerEvent(EventType.PointerClick);
         evt.SetSwingbyEvent(sbEvent);
+
+        var sbButton = Swingby.sb_event_pointer_button(sbEvent);
+
+        var button = sbButton switch
+        {
+            Swingby.SB_POINTER_BUTTON_LEFT => PointerButton.Left,
+            Swingby.SB_POINTER_BUTTON_RIGHT => PointerButton.Right,
+            Swingby.SB_POINTER_BUTTON_MIDDLE => PointerButton.Middle,
+            _ => PointerButton.None
+        };
+
+        evt.Button = button;
 
         this.PointerClickEvent(evt);
     }

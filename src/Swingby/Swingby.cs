@@ -341,11 +341,11 @@ internal class Swingby
     internal static int SB_IMAGE_FILE_FORMAT_AUTO = 255;
 
     // enum sb_pointer_button
-    internal static int SB_POINTER_BUTTON_NONE = 0;
-    internal static int SB_POINTER_BUTTON_LEFT = 1;
-    internal static int SB_POINTER_BUTTON_RIGHT = 2;
-    internal static int SB_POINTER_BUTTON_MIDDLE = 4;
-    internal static int SB_POINTER_BUTTON_UNIMPLEMENTED = 65536;
+    internal const int SB_POINTER_BUTTON_NONE = 0;
+    internal const int SB_POINTER_BUTTON_LEFT = 1;
+    internal const int SB_POINTER_BUTTON_RIGHT = 2;
+    internal const int SB_POINTER_BUTTON_MIDDLE = 4;
+    internal const int SB_POINTER_BUTTON_UNIMPLEMENTED = 65536;
 
     public delegate void EventListener(IntPtr sbEvent);
 
